@@ -34,7 +34,7 @@ const http = {
   del(url, data = {}) {
     return new Promise((resolve, reject) => {
       axios
-        .delete(url, { data })
+        .delete(url, {data})
         .then((resp) => resolve(resp))
         .catch((err) => {
           console.log("error:", err);

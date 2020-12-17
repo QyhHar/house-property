@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Notification, Message } from "element-ui";
+import {Notification, Message} from "element-ui";
 
 let PREFIX = "/api",
   IP = "";
