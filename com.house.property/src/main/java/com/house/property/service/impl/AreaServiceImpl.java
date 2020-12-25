@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.house.property.entity.Area;
 import com.house.property.mapper.AreaMapper;
 import com.house.property.service.AreaService;
+import com.house.property.service.base.BaseServiceImpl;
 import com.house.property.utils.TreeNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

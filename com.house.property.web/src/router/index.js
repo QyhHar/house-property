@@ -3,8 +3,8 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import House from '@/components/House'
 import Register from '@/components/Register'
-import Details from '@/components/Details'
-import Newadd from '@/components/Newadd'
+import HouseEdit from '@/components/HouseEdit'
+import HouseAdd from '@/components/HouseAdd'
 
 Vue.use(Router)
 
@@ -31,14 +31,14 @@ export default new Router({
       component: Register
     },
     {
-      path: '/details',
-      name: 'details',
-      component: Details
+      path: '/houseEdit',
+      name: 'houseEdit',
+      component: HouseEdit
     },
     {
-      path: '/newadd',
-      name: 'newadd',
-      component: Newadd
+      path: '/houseAdd',
+      name: 'houseAdd',
+      component: HouseAdd
     }
   ]
 })

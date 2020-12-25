@@ -1,5 +1,5 @@
 <template>
-    <div class="house">
+    <div id="house">
         <div class="header">
             <div class="wrap">
                 <!-- 导航 -->
@@ -30,9 +30,9 @@
                             <el-button slot="append" icon="el-icon-search"></el-button>
                         </el-input>
                     </el-tabs>
-                    
+
                 </div>
-            </div> 
+            </div>
         </div>
         <div class="list1">
             <div class="name">品质好房</div>
@@ -76,7 +76,7 @@
                 </el-row>
             </div>
         </div>
-    </div> 
+    </div>
 </template>
 
 <script>
@@ -96,193 +96,196 @@ export default {
 </script>
 
 <style lang="less">
-.header{
-    width: 100%;
-    height: 566px;
-    background: #000 url(../assets/house/bg_header@1x.jpg) ;
-    color: #fff;
-    padding-top: 36px;
-    .wrap{
+  #house{
+    .header{
+      width: 100%;
+      height: 566px;
+      background: #000 url(src/assets/house/bg_header@1x.jpg) ;
+      color: #fff;
+      padding-top: 36px;
+      .wrap{
         padding: 0 50px;
         .wrap-top{
-            width: 100%;
-            height: 30px;
-            line-height: 30px;
+          width: 100%;
+          height: 30px;
+          line-height: 30px;
+          overflow: hidden;
+          .fl{
+            width: 15%;
+            float: left;
+            font-size: 24px;
+          }
+          .fr{
+            width: 60% ;
+            float: right;
             overflow: hidden;
-            .fl{
-                width: 15%;
-                float: left;
-                font-size: 24px;
+            ul{
+              width: 70%;
+              float: left;
+              text-align: right;
+              li{
+                list-style: none;
+                display: inline;
+                padding: 0 20px;
+                cursor: pointer;
+              }
             }
-            .fr{
-                width: 60% ;
-                float: right;
-                overflow: hidden;
-                ul{
-                    width: 70%;
-                    float: left;
-                    text-align: right;
-                    li{
-                    list-style: none;
-                    display: inline;
-                    padding: 0 20px;
-                    cursor: pointer;
-                    }
-                }
-                .backstage{
-                    width: 10%;
-                    float: left;
-                    padding-left: 20px 
-                    ;cursor: pointer;
+            .backstage{
+              width: 10%;
+              float: left;
+              padding-left: 20px
+            ;cursor: pointer;
 
-                }
-                .loginReg{
-                    width: 15%;
-                    float: right;
-                    i{
-                        font-style: normal;
-                        cursor: pointer;
-                    } 
-                    .svg-icon{
-                        width: 1.3em;
-                        height: 1.3em;
-                    }
-                }
             }
+            .loginReg{
+              width: 15%;
+              float: right;
+              i{
+                font-style: normal;
+                cursor: pointer;
+              }
+              .svg-icon{
+                width: 1.3em;
+                height: 1.3em;
+              }
+            }
+          }
         }
         .wrap-bot{
-            width: 1200px;
-            margin: 120px auto 0px;  
-            p{
-                font-size: 28px;
-                font-weight: 300;
-                text-align: left;
-            }
-            h3{
-               font-size: 66px;
-               font-weight: 600;
-               line-height: 80px; 
-               text-align: left;
-               padding: 10px 0px 30px;
-               font-family: \\5FAE\8F6F\96C5\9ED1,Hiragino Sans GB;
-            }
-            .el-tabs__header{
-                margin: 0;
-            }
-            .el-tabs__nav-wrap::after{
-                background-color:transparent;
-            }
-            .el-tabs__active-bar{
-                border-left: 9px solid transparent;
-                border-right: 9px solid transparent;
-                width: 0px!important;
-                height: 0;
-                transition: all .3s ease-in-out;
-                position: absolute;
-                top: 44px;
-                left: 16px;
-                border-bottom: 10px solid #fff;
-                z-index: 9;
-                background-color: transparent;
+          width: 1200px;
+          margin: 120px auto 0px;
+          p{
+            font-size: 28px;
+            font-weight: 300;
+            text-align: left;
+          }
+          h3{
+            font-size: 66px;
+            font-weight: 600;
+            line-height: 80px;
+            text-align: left;
+            padding: 10px 0px 30px;
+            font-family: \\5FAE\8F6F\96C5\9ED1,Hiragino Sans GB;
+          }
+          .el-tabs__header{
+            margin: 0;
+          }
+          .el-tabs__nav-wrap::after{
+            background-color:transparent;
+          }
+          .el-tabs__active-bar{
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+            width: 0px!important;
+            height: 0;
+            transition: all .3s ease-in-out;
+            position: absolute;
+            top: 44px;
+            left: 16px;
+            border-bottom: 10px solid #fff;
+            z-index: 9;
+            background-color: transparent;
 
-            }
-            .el-tabs__item.is-active{
-                color: #fff;
-                font-size: 16px;
-            }
-            .el-tabs__item{
-                color: rgb(180, 180, 180);
-                font-size: 16px;
-                height: 54px;
-            }
-            .el-tabs__item:hover{
-                color: rgb(221, 221, 221);
-            }
-            .el-input-group{
-                width: 35%;
-            }
-            .el-input-group__append, .el-input-group__prepend{
-                background-color:#3072F6 ;
-                color: #fff;
-                border: 1px solid #3072F6;
+          }
+          .el-tabs__item.is-active{
+            color: #fff;
+            font-size: 16px;
+          }
+          .el-tabs__item{
+            color: rgb(180, 180, 180);
+            font-size: 16px;
+            height: 54px;
+          }
+          .el-tabs__item:hover{
+            color: rgb(221, 221, 221);
+          }
+          .el-input-group{
+            width: 35%;
+          }
+          .el-input-group__append, .el-input-group__prepend{
+            background-color:#3072F6 ;
+            color: #fff;
+            border: 1px solid #3072F6;
 
-            }
+          }
 
         }
+      }
     }
-}
-.list1{
-    width: 1200px;
-    margin: 80px auto 0;
-    .name{
+    .list1{
+      width: 1200px;
+      margin: 80px auto 0;
+      .name{
         font-size: 36px;
         line-height: 50px;
         color: #101d37;
         font-weight: 600;
-    }
-    p{
+      }
+      p{
         color: #9399a5;
         width: 1150px;
         font-size: 16px;
         line-height: 22px;
-    }
-    .list1-inner{
+      }
+      .list1-inner{
         width: 1200px;
         overflow: hidden;
         margin-top: 26px;
         .time {
-            font-size: 13px;
-            color: #999;
+          font-size: 13px;
+          color: #999;
         }
         .bottom {
-            margin-top: 13px;
-            line-height: 12px;
+          margin-top: 13px;
+          line-height: 12px;
         }
         .button {
-            padding: 0;
-            float: right;
-            }
+          padding: 0;
+          float: right;
+        }
         .image {
-            width: 100%;
-            display: block;
+          width: 100%;
+          display: block;
         }
         .clearfix:before,
         .clearfix:after {
-            display: table;
-            content: "";
-            }
+          display: table;
+          content: "";
+        }
         .clearfix:after {
-            clear: both
+          clear: both
         }
         .el-col-8{
-            width: 21.5%;
+          width: 21.5%;
         }
         h2{
-            font-size: 18px;
-            font-weight: 700;
-            line-height: 24px;
-            color: #222;
+          font-size: 18px;
+          font-weight: 700;
+          line-height: 24px;
+          color: #222;
         }
         .bottom{
-            width: 100%;
-            height: 26px;
-            line-height: 26px;
-            overflow: hidden;
-            .size{
-                width: 70%;
-                font-size: 12px;
-                color: #616669;
-                float: left;
-            }
-            .money{
-                width: 30%;
-                float: right;
-                color: #f00;
-                text-align: right;
-            }
+          width: 100%;
+          height: 26px;
+          line-height: 26px;
+          overflow: hidden;
+          .size{
+            width: 70%;
+            font-size: 12px;
+            color: #616669;
+            float: left;
+          }
+          .money{
+            width: 30%;
+            float: right;
+            color: #f00;
+            text-align: right;
+          }
         }
 
+      }
+
     }
-    
-}
+  }
+
 </style>

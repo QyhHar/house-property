@@ -3,6 +3,7 @@ package com.house.property.controller;
 import com.house.property.entity.Area;
 import com.house.property.entity.User;
 import com.house.property.service.AreaService;
+import com.house.property.utils.MD5Util;
 import com.house.property.utils.Response;
 import com.house.property.utils.TreeNode;
 import lombok.extern.slf4j.Slf4j;
@@ -41,10 +42,21 @@ public class AreaController {
         return new Response(treeArea);
     }
 
+    /**
+     * @Description: 获取子区域
+     * @Author: hang.qi
+     * @Date: 2020/12/23 0023 下午 4:24
+     */
     @GetMapping("getChildArea")
     public Response getChildArea(Long parentId){
-        log.info("获取区域树");
-        List<Area> byParentId = areaService.getByParentId(parentId);
-        return new Response(byParentId);
+        try {
+            log.info("获取子区域；parentId"+parentId);
+            List<Area> byParentId = areaService.getByParentId(parentId);
+            return new Response(byParentId);
+        }catch (Exception e){
+            log.error("获取子区域出错",e);
+        }
+        return new Response(1,"获取子区域出错");
+
     }
 }

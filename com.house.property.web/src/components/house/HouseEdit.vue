@@ -1,6 +1,6 @@
 <template>
-  <div class="details">
-      
+  <div id="houseEdit">
+
   </div>
 </template>
 
@@ -11,5 +11,7 @@ export default {
 </script>
 
 <style>
+#houseEdit{
 
+}
 </style>

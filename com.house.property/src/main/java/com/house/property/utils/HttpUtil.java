@@ -32,9 +32,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class HttpUtils {
+public class HttpUtil {
 
-    private static Logger logger = LoggerFactory.getLogger(HttpUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
     /**
      * get请求

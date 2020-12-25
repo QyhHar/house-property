@@ -1,8 +1,13 @@
 package com.house.property.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.house.property.entity.Area;
+import com.house.property.entity.House;
 import com.house.property.entity.User;
+import com.house.property.mapper.HouseMapper;
 import com.house.property.mapper.UserMapper;
+import com.house.property.service.HouseService;
 import com.house.property.service.UserService;
 import com.house.property.service.base.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -14,23 +19,21 @@ import java.util.List;
 /**
  * @author hang.qi
  * @program: property
- * @description: 用户Service实现类
+ * @description: 房屋Service实现类
  * @date 2020-12-16 17:49:51
  */
 @Slf4j
 @Service
-public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {
+public class HouseServiceImpl extends BaseServiceImpl<House> implements HouseService {
 
     @Autowired
-    private UserMapper userMapper;
+    private HouseMapper houseMapper;
+
 
     @Override
-    public User getUserByUserName(String userName) {
-        QueryWrapper<User> query = new QueryWrapper<>();
-        query.lambda().eq(User::getUserName,userName);
-        List<User> users = userMapper.selectList(query);
-        if(users.size()>0) return users.get(0);
-        return null;
+    public List<House> getByUserId(Long userId) {
+        QueryWrapper<House> query = new QueryWrapper<>();
+        query.lambda().eq(House::getUserId,userId);
+        return houseMapper.selectList(query);
     }
-
 }

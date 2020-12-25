@@ -1,5 +1,5 @@
 <template>
-  <div class="newadd">
+  <div id="houseAdd">
       <div class="header">
           <ul>
               <li>买房</li>
@@ -12,7 +12,7 @@
             <i>登陆</i> / <i>注册</i>
           </div>
       </div>
-      
+
   </div>
 </template>
 
@@ -23,5 +23,7 @@ export default {
 </script>
 
 <style lang="less">
+#houseAdd{
 
+}
 </style>

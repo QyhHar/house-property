@@ -4,7 +4,7 @@
     <div class="login-center">
       <div class="inner">
         <h2>账号密码登陆</h2>
-        <el-input v-model="input" placeholder="请输入用户名/账号" prefix-icon="el-icon-user" class="account"></el-input>   
+        <el-input v-model="input" placeholder="请输入用户名/账号" prefix-icon="el-icon-user" class="account"></el-input>
         <el-input v-model="input" placeholder="请输入密码"  prefix-icon="el-icon-unlock" class="account" show-password></el-input>
         <div class="optionalRules">
           <el-checkbox v-model="checked">记住密码</el-checkbox>
@@ -33,7 +33,7 @@
 #login{
   width: 100%;
   height: 100%;
-  
+
   background-color: #fbfbfb;
   .login-nav{
     width: 1200px;
@@ -46,7 +46,7 @@
   .login-center{
     width: 100%;
     height:706px;
-    background: url("../assets/login/login.jpg") no-repeat center top;
+    background: url("src/assets/login/login.jpg") no-repeat center top;
     border-top:#ececec 1px solid;
     border-bottom:#ececec 1px solid;
     .inner{
