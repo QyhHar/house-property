@@ -18,13 +18,12 @@
 
   html {
     overflow-x: hidden;
-    overflow-y: hidden;
     height: 100%;
   }
 
   body {
-    width: 1920px;
-    height: 1080px;
+    width: 100vw;
+   
   }
 
 </style>

@@ -1,16 +1,18 @@
 <template>
-  <div id="login">
+  <div id="register">
     <div class="login-nav">房产信息发布系统</div>
     <div class="login-center">
       <div class="inner">
-        <h2>账号密码登陆</h2>
-        <el-input v-model="input" placeholder="请输入用户名/账号" prefix-icon="el-icon-user" class="account"></el-input>   
-        <el-input v-model="input" placeholder="请输入密码"  prefix-icon="el-icon-unlock" class="account" show-password></el-input>
+        <h2>注册</h2>
+        <el-input v-model="user.nickName" placeholder="请输入用户名" prefix-icon="el-icon-user" class="account"></el-input>   
+        <el-input v-model="user.userName" placeholder="请输入账号" prefix-icon="el-icon-user" class="account"></el-input>
+        <el-input v-model="user.userPassword" placeholder="请输入密码"  prefix-icon="el-icon-unlock" class="account" show-password></el-input>
+        <el-input v-model="user.userPassword2" placeholder="请再次确认密码"  prefix-icon="el-icon-unlock" class="account" show-password></el-input>
         <div class="optionalRules">
-          <el-checkbox v-model="checked">记住密码</el-checkbox>
-          <p @click="$router.push('/register')">立即注册</p>
+          
+          <p>已有账号，请<i @click="$router.push('/login')">登录</i></p>
         </div>
-        <div class="loginBut">登  陆</div>
+        <div class="loginBut" @click="register">确  定</div>
       </div>
     </div>
 
@@ -18,19 +20,46 @@
 </template>
 
 <script>
+import api from '../api/user.api'
   export default {
-    name: 'login',
+    name: 'register',
     data() {
       return {
           input: '',
           checked: true,
+          user:{
+            nickName:'',
+            userName:'',
+            userPassword:'',
+            userPassword2:'',
+            type:'0',
+          },
+      }
+    },
+    methods:{
+      register(){
+        api.register(this.user).then(res => {
+                if(res.code==0){
+                  this.$message({
+                    type: 'success',
+                    message: '注册成功!'
+                  })
+                  this.$router.push('/login')
+                }else{
+                  this.message({
+                    message: res.message,
+                    type: 'warning'
+                  })
+                }
+                
+            });
       }
     }
   }
 </script>
 
 <style lang="less">
-#login{
+#register{
   width: 100%;
   height: 100%;
   
@@ -51,10 +80,10 @@
     border-bottom:#ececec 1px solid;
     .inner{
       width: 400px;
-      height: 320px;
+      height: 450px;
       padding: 35px 45px;
       background-color: #fff;
-      margin: 100px auto 0px;
+      margin: 80px auto 0px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
       h2{
         font-size: 24px;
@@ -80,20 +109,18 @@
       }
       .optionalRules{
         width: 100%;
-        overflow: hidden;
         height: 50px;
         line-height: 50px;
-        .el-checkbox{
-          width: 50%;
-          float: left;
-        }
         p{
-          width: 50%;
-          float: left;
+          width: 100%;
           text-align: right;
           font-size: 14px;
           color: #999;
           cursor: pointer;
+          i{
+            font-style:normal ;
+            color: #3072F6;
+          }
         }
       }
     }
