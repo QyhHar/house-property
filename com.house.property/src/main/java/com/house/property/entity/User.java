@@ -22,7 +22,7 @@ public class User implements java.io.Serializable {
     private Long id;
     private String nickName;//昵称
     private String userName;//登录账号
-    private String userPassword;//密码
+    private String password;//密码
     private String type; //账户类型：0-普通用户；1-超级管理员
 
 }

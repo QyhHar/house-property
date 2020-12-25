@@ -8,14 +8,24 @@
                     <div class="fr">
                         <ul>
                             <li>买房</li>
-                            <li>卖房</li>
+                            <li @click="$router.push('/houseAdd')">卖房</li>
                             <li>租房</li>
-                            <li>出租</li>
+                            <li @click="$router.push('/houseAdd')">出租</li>
                         </ul>
-                        <div class="backstage">后台管理</div>
-                        <div class="loginReg">
+                        <div class="backstage" v-if="userInfo.type==1">后台管理</div>
+
+                        <div class="loginReg" >
+                          <el-dropdown :hide-timeout="1000" @command="handleCommand">
+                            <span>{{ userInfo.nickName? `欢迎您，${userInfo.nickName}` : 'admin' }}</span>
+                            <el-dropdown-menu slot="dropdown">
+                              <el-dropdown-item  @click="$router.push('/login')">退出登录</el-dropdown-item>
+                            </el-dropdown-menu>
+                          </el-dropdown>
+                          <div v-if="userInfo">欢迎您，{{userInfo.nickName}}
+                          </div>
+                          <div v-else >
                             <svg-icon icon-class="head-icon"></svg-icon>
-                            <i>登陆</i> / <i>注册</i>
+                            <i @click="$router.push('/login')">登陆</i> / <i @click="$router.push('/register')">注册</i></div>
                         </div>
                     </div>
                 </div>
@@ -26,7 +36,7 @@
                     <el-tabs v-model="activeName" @tab-click="handleClick">
                         <el-tab-pane label="找买房" name="first"></el-tab-pane>
                         <el-tab-pane label="找租房" name="second"></el-tab-pane>
-                        <el-input placeholder="请输入内容" v-model="input3" class="input-with-select">
+                        <el-input placeholder="请输入内容" v-model="input" class="input-with-select">
                             <el-button slot="append" icon="el-icon-search"></el-button>
                         </el-input>
                     </el-tabs>
@@ -84,12 +94,18 @@ export default {
     name:'house',
     data(){
         return{
-            activeName: 'second',
+          activeName: 'first',
+          input:'',
+          userInfo:{},
         }
     },
-    methods:{
+  created() {
+    if (sessionStorage.userInfo) {
+      this.userInfo = JSON.parse(sessionStorage.userInfo);
+    }
+  },
+  methods:{
         handleClick(tab, event) {
-            console.log(tab, event);
       }
     }
 }

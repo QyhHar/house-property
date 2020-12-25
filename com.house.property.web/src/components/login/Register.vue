@@ -6,8 +6,8 @@
         <h2>注册</h2>
         <el-input v-model="user.nickName" placeholder="请输入用户名" prefix-icon="el-icon-user" class="account"></el-input>
         <el-input v-model="user.userName" placeholder="请输入账号" prefix-icon="el-icon-user" class="account"></el-input>
-        <el-input v-model="user.userPassword" placeholder="请输入密码"  prefix-icon="el-icon-unlock" class="account" show-password></el-input>
-        <el-input v-model="user.userPassword2" placeholder="请再次确认密码"  prefix-icon="el-icon-unlock" class="account" show-password></el-input>
+        <el-input v-model="user.password" placeholder="请输入密码"  prefix-icon="el-icon-unlock" class="account" show-password></el-input>
+        <el-input v-model="user.password2" placeholder="请再次确认密码"  prefix-icon="el-icon-unlock" class="account" show-password></el-input>
         <div class="optionalRules">
 
           <p>已有账号，请<i @click="$router.push('/login')">登录</i></p>
@@ -30,8 +30,8 @@ import api from '../../api/user.api'
           user:{
             nickName:'',
             userName:'',
-            userPassword:'',
-            userPassword2:'',
+            password:'',
+            password2:'',
             type:'0',
           },
       }

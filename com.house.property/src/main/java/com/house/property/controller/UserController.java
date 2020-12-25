@@ -1,14 +1,12 @@
 package com.house.property.controller;
 
 import com.house.property.entity.User;
-import com.house.property.mapper.UserMapper;
 import com.house.property.service.UserService;
 import com.house.property.utils.MD5Util;
 import com.house.property.utils.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -50,7 +48,7 @@ public class UserController {
 
             User userByUserName = userService.getUserByUserName(user.getUserName());
             if(userByUserName==null) return new Response(1,"用户名和密码不匹配");
-            if(StringUtils.equals(userByUserName.getUserPassword(),MD5Util.getMD5Str(user.getUserPassword()))){
+            if(StringUtils.equals(userByUserName.getPassword(),MD5Util.getMD5Str(user.getPassword()))){
                 return new Response(userByUserName);
             }
             return new Response(1,"用户名和密码不匹配");
@@ -69,7 +67,7 @@ public class UserController {
     public Response register(@RequestBody User user){
         try {
             log.info("注册接口");
-            user.setUserPassword(MD5Util.getMD5Str(user.getUserPassword()));
+            user.setPassword(MD5Util.getMD5Str(user.getPassword()));
             userService.save(user);
             return new Response("注册成功");
         }catch (Exception e){
