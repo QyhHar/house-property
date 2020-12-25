@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/components/Login'
-import House from '@/components/House'
-import Register from '@/components/Register'
-import HouseEdit from '@/components/HouseEdit'
-import HouseAdd from '@/components/HouseAdd'
+import Login from '@/components/login/Login'
+import House from '@/components/house/House'
+import Register from '@/components/login/Register'
+import HouseEdit from '@/components/house/HouseEdit'
+import HouseAdd from '@/components/house/HouseAdd'
 
 Vue.use(Router)
 

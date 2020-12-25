@@ -100,7 +100,7 @@ export default {
     .header{
       width: 100%;
       height: 566px;
-      background: #000 url(src/assets/house/bg_header@1x.jpg) ;
+      background: #000 url(../../assets/house/bg_header@1x.jpg) ;
       color: #fff;
       padding-top: 36px;
       .wrap{

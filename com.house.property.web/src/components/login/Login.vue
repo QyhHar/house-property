@@ -46,7 +46,7 @@
   .login-center{
     width: 100%;
     height:706px;
-    background: url("src/assets/login/login.jpg") no-repeat center top;
+    background: url("../../assets/login/login.jpg") no-repeat center top;
     border-top:#ececec 1px solid;
     border-bottom:#ececec 1px solid;
     .inner{
