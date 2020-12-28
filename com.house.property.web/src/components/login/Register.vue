@@ -38,21 +38,41 @@ import api from '../../api/user.api'
     },
     methods:{
       register(){
+        if(this.user.password!==this.user.password2){
+          this.$message({
+            type: 'error',
+            message: '请输入两次相同的密码!'
+          })
+          return false;
+        }
+        let bres=/^[a-zA-Z]+$/.test(this.user.userName);
+        console.log(bres,'res');
+        if(!bres){
+          this.$message({
+            type: 'error',
+            message: '请输入英文字母!'
+          })
+          return false;
+        }
         api.register(this.user).then(res => {
-                if(res.code==0){
-                  this.$message({
-                    type: 'success',
-                    message: '注册成功!'
-                  })
-                  this.$router.push('/login')
-                }else{
-                  this.message({
-                    message: res.message,
-                    type: 'warning'
-                  })
-                }
+          if(res.code==0){
+            this.$message({
+              type: 'success',
+              message: '注册成功!'
+            })
+            setTimeout(()=>{
+              this.$router.push('/login')
+            },2000) 
+          }else{
+            this.message({
+              message: res.message,
+              type: 'warning'
+            })
+          }
+        });
+        
 
-            });
+        
       }
     }
   }

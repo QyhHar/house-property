@@ -54,7 +54,11 @@
         }
       },
       login(){
-        api.login({userName:this.userName,password:this.password}).then(res => {
+        let data={
+          userName:this.userName,
+          password:this.password
+        }
+        api.login(data).then(res => {
           if(res.code==0){
             this.$message({
               type: 'success',

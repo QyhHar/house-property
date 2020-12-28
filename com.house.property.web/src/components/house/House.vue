@@ -21,7 +21,7 @@
                               <el-dropdown-item  @click="$router.push('/login')">退出登录</el-dropdown-item>
                             </el-dropdown-menu>
                           </el-dropdown>
-                          <div v-if="userInfo">欢迎您，{{userInfo.nickName}}
+                          <div v-if="userInfo" class="userName">欢迎您，{{userInfo.nickName}}
                           </div>
                           <div v-else >
                             <svg-icon icon-class="head-icon"></svg-icon>
@@ -164,6 +164,10 @@ export default {
                 width: 1.3em;
                 height: 1.3em;
               }
+            }
+            .el-dropdown{
+              color: #fff;
+              cursor: pointer;
             }
           }
         }
