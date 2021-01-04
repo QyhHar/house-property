@@ -5,7 +5,7 @@ async function register(params) {
   return await http.post('/user/register', params)
 }
 
-//注册
+//登陆
 async function login(params) {
   return await http.post('/user/login', params)
 }

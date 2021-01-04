@@ -1,6 +1,8 @@
 <template>
   <div id="register">
-    <div class="login-nav">房产信息发布系统</div>
+    <div class="login-nav">
+      <div class="logo"><img src="../../assets/login/logo.png"></div>
+    </div>
     <div class="login-center">
       <div class="inner">
         <h2>注册</h2>
@@ -88,9 +90,13 @@ import api from '../../api/user.api'
     width: 1200px;
     height: 70px;
     margin: 0 auto;
-    font-size: 24px;
-    line-height: 70px;
-    color: #353638;
+    .logo{
+      width:150px;
+      padding-top: 5px;
+      img{
+        width:150px;
+      }
+    }
   }
   .login-center{
     width: 100%;

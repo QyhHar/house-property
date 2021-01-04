@@ -2,14 +2,15 @@
       <div id="header">
         <div class="inner">
           <ul>
-            <li>买房</li>
-            <li>卖房</li>
-            <li>租房</li>
-            <li>出租</li>
+            <li @click="$router.push('/house')">首页</li>
+            <li @click="$router.push('/houseBuy')">买房</li>
+            <li @click="$router.push('/houseAdd')">卖房</li>
+            <li @click="$router.push('/houseRenting')">租房</li>
+            <li @click="$router.push('/houseAdd')">出租</li>
           </ul>
           <div class="loginReg">
             <svg-icon icon-class="head-icon"></svg-icon>
-            <i>登陆</i> / <i>注册</i>
+            <i @click="$router.push('/login')">登陆</i> / <i @click="$router.push('/register')">注册</i>
           </div>
         </div>
       </div>
@@ -36,8 +37,7 @@
       li{
         display: inline;
         color: #a9abab;
-        margin: 0 20px;
-        
+        margin-right: 40px;
       }
       li:hover{
         cursor: pointer;

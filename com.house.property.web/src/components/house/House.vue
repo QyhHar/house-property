@@ -4,12 +4,14 @@
             <div class="wrap">
                 <!-- 导航 -->
                 <div class="wrap-top">
-                    <div class="fl">房产信息发布系统</div>
+                    <div class="fl">
+                      <div class="logo"><img src="../../assets/login/logo1.png"></div>
+                    </div>
                     <div class="fr">
                         <ul>
-                            <li>买房</li>
+                            <li @click="$router.push('/houseBuy')">买房</li>
                             <li @click="$router.push('/houseAdd')">卖房</li>
-                            <li>租房</li>
+                            <li @click="$router.push('/houseRenting')">租房</li>
                             <li @click="$router.push('/houseAdd')">出租</li>
                         </ul>
                         <div class="backstage" v-if="userInfo.type==1">后台管理</div>
@@ -118,18 +120,24 @@ export default {
       height: 566px;
       background: #000 url(../../assets/house/bg_header@1x.jpg) ;
       color: #fff;
-      padding-top: 36px;
+      padding-top: 15px;
       .wrap{
         padding: 0 50px;
         .wrap-top{
           width: 100%;
-          height: 30px;
-          line-height: 30px;
+          height: 60px;
+          line-height: 60px;
           overflow: hidden;
           .fl{
             width: 15%;
             float: left;
-            font-size: 24px;
+            .logo{
+              width:150px;
+              padding: 5px 0 0 100px;
+              img{
+                width:150px;
+              }
+            }
           }
           .fr{
             width: 60% ;
@@ -277,6 +285,7 @@ export default {
         }
         .el-col-8{
           width: 21.5%;
+          cursor: pointer;
         }
         h2{
           font-size: 18px;

@@ -4,3 +4,23 @@ li{
 i{
     font-style: normal;
 }
+html{
+    font-size: 14px;
+    color: #333;
+}
+a{
+    text-decoration: none;
+}
+img{
+    border: none;
+}
+h1,h2,h3,h4,h5,h6{
+    font-weight: normal;
+}
+input{
+    border: none;
+    background-color: transparent;
+}
+a,input{
+    outline: none;
+}
