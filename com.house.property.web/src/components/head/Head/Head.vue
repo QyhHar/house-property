@@ -4,9 +4,9 @@
           <ul>
             <li @click="$router.push('/house')">首页</li>
             <li @click="$router.push('/houseBuy')">买房</li>
-            <li @click="$router.push('/houseAdd')">卖房</li>
+            <li @click="goHouseAdd(0)">卖房</li>
             <li @click="$router.push('/houseRenting')">租房</li>
-            <li @click="$router.push('/houseAdd')">出租</li>
+            <li @click="goHouseAdd(1)">出租</li>
           </ul>
           <div class="loginReg">
             <svg-icon icon-class="head-icon"></svg-icon>
@@ -18,7 +18,39 @@
 
 
 <script>
-    export default {}
+    export default {
+      name:'head',
+      data(){
+        return{
+          userInfo:{},
+        }
+      },
+      created() {
+        if (sessionStorage.userInfo) {
+          this.userInfo = JSON.parse(sessionStorage.userInfo);
+        }
+      },
+      methods:{
+        goHouseAdd(val){
+          if(this.userInfo.nickName){
+            if(this.$route.path==='/houseAdd'){
+              this.$emit("getType", val);
+            }else {
+              this.$router.push({
+                path: "/houseAdd",
+                query: { type: val },
+              });
+            }
+          }else {
+            this.$message({
+              message: '请登录',
+              type: 'warning'
+            });
+            this.$router.push('/login')
+          }
+        }
+      }
+    }
 </script>
 <style lang="less" >
 #header{

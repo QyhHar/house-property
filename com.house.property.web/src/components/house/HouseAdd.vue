@@ -1,10 +1,10 @@
 <template>
   <div id="houseAdd">
-    <Head></Head>
+    <Head @getType="getType"></Head>
     <div class="head">
       <div class="title">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="我要卖房" name="first"></el-tab-pane>
+          <el-tab-pane label="我要卖房"  name="first"></el-tab-pane>
           <el-tab-pane label="委托出租" name="second"></el-tab-pane>
         </el-tabs>
       </div>
@@ -109,7 +109,7 @@ export default {
           label: '合租'
         }],
 
-        activeName: 'first',
+
         house:{
 
         },
@@ -128,6 +128,7 @@ export default {
             label: '设计原则',
             }],
         }],
+        activeName: 'first',
         type:'0',
         formData:{
           areaId:'',//区域id
@@ -158,8 +159,12 @@ export default {
     Head,
   },
   methods:{
+    getType(val){
+      this.type=val;
+    },
     handleClick(tab, event) {
-      console.log(tab, event);
+      if(tab.name==='first') this.type='0';
+      if(tab.name==='second') this.type='1';
     },
     handleSubmit(){
       this.initData();
@@ -181,6 +186,7 @@ export default {
       this.options=res.data;
     });
     this.type=this.$route.query.type;
+    if(this.type==1)this.activeName='second'
   }
 }
 </script>

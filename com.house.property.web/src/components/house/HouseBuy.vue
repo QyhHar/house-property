@@ -3,7 +3,7 @@
       <Head></Head>
       <div class="search">
         <div class="search-inner">
-            <el-input placeholder="请输入区域或小区名开始找房" v-model="input1" class="input-with-select">
+            <el-input placeholder="请输入小区名开始找房" v-model="input1" class="input-with-select">
                 <el-button slot="append" icon="el-icon-search"></el-button>
             </el-input>
         </div>
@@ -11,10 +11,10 @@
       <div class="filter">
           <div class="position">
               <dl>
-                  <dt>位置</dt>
-                  <dd>
-                    
-                  </dd>
+                  <dt style="margin-top: 5px;">位置</dt>
+                <dd>
+                  <el-cascader :options="options" style="width:35%" clearable ></el-cascader>
+                </dd>
               </dl>
           </div>
           <div class="list-more">
@@ -22,7 +22,7 @@
                   <dt>价格</dt>
                   <dd>
                     <el-checkbox-group v-model="checkedPrice">
-                        <el-checkbox v-for="item in price" :label="item" :key="item">{{item}}</el-checkbox>
+                        <el-checkbox v-for="item in price" :label="item" :key="item">{{item+`万`}}</el-checkbox>
                     </el-checkbox-group>
                   </dd>
               </dl>
@@ -38,7 +38,7 @@
                   <dt>建筑面积</dt>
                   <dd>
                     <el-checkbox-group v-model="checkedArea">
-                        <el-checkbox v-for="item in area" :label="item" :key="item">{{item}}</el-checkbox>
+                        <el-checkbox v-for="item in area" :label="item" :key="item">{{item+`m²`}}</el-checkbox>
                     </el-checkbox-group>
                   </dd>
               </dl>
@@ -49,24 +49,34 @@
 
 <script>
 import Head from "../head/Head/Head";
-const priceOptions = ['40万以下', '40-60万', '60-80万', '80-100万', '100-150万', '150-200万'];
+const priceOptions = ['0-40', '40-60', '60-80', '80-100', '100-150', '150-200'];
 const houseTypeOptions = ['一室', '两室', '三室', '四室', '五室', '五室以上'];
-const areaOptions = ['50㎡', '50-70㎡', '70-90㎡', '90-120㎡', '120-150㎡', '150-200㎡'];
+const areaOptions = ['0-50', '50-70', '70-90', '90-120', '120-150', '150-200'];
+import api from "../../api/house.api"
 export default {
     components:{
         Head,
     },
     data(){
         return{
-            input1: '',
-            checkedPrice: [],
-            price: priceOptions,
-            checkedHouseType:[],
-            houseType:houseTypeOptions,
-            checkedArea:[],
-            area:areaOptions,
+          priceOptions :['0-40', '40-60', '60-80', '80-100', '100-150', '150-200'],
+          houseTypeOptions : ['一室', '两室', '三室', '四室', '五室', '五室以上'],
+          areaOptions : ['0-50', '50-70', '70-90', '90-120', '120-150', '150-200'],
+          input1: '',
+          checkedPrice: [],
+          price: priceOptions,
+          checkedHouseType:[],
+          houseType:houseTypeOptions,
+          checkedArea:[],
+          area:areaOptions,
+          options:[],
         }
-    }
+    },
+  created() {
+    api.getChildArea().then(res => {
+      this.options=res.data;
+    });
+  }
 }
 </script>
 
@@ -91,6 +101,10 @@ export default {
         margin: 20px auto;
         padding: 10px 20px;
         font-size: 12px;
+        .el-input__inner{
+          border: 0px;
+          background-color: #f5f5f6;
+        }
         dl{
             overflow: hidden;
             dt{
