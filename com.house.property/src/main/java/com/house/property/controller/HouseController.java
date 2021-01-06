@@ -1,6 +1,9 @@
 package com.house.property.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.house.property.entity.Area;
 import com.house.property.entity.House;
 import com.house.property.entity.Image;
@@ -17,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author hang.qi
@@ -34,6 +39,36 @@ public class HouseController {
     private HouseService houseService;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private UserService userService;
+
+    /**
+     * @Description: 条件查询房屋信息分页
+     * @Author: hang.qi
+     * @Date: 2020/12/31 0031 下午 5:06
+     */
+    @PostMapping("getByQuery")
+    public Response getByQuery(@RequestBody JSONObject jsonObject){
+        try {
+            log.info("条件查询房屋信息分页");
+            Long current = jsonObject.getLong("current");
+            Long size = jsonObject.getLong("size");
+            if(current==null||size==null){
+                return new Response(1,"参数不全");
+            }
+            IPage<House> page = new Page<>(current-1,size);
+            House house = jsonObject.toJavaObject(House.class);
+            QueryWrapper<House> queryWrapper = new QueryWrapper<>();
+            IPage<House> houseIPage = houseService.selectPageByQuery(page, house, queryWrapper);
+            for (House house1: houseIPage.getRecords()) {
+                house1.setImages(imageService.getImageByHouseId(house1.getId()));
+            }
+            return new Response(houseIPage);
+        }catch (Exception e){
+            log.error("获取用户绑定的所有房屋出错",e);
+        }
+        return new Response(1,"获取用户绑定的所有房屋出错");
+    }
 
     /**
      * @Description: 获取用户绑定的所有房屋
@@ -41,7 +76,7 @@ public class HouseController {
      * @Date: 2020/12/16 0016 下午 5:39
      */
     @GetMapping("getByUserId")
-    public Response getUserName(Long userId){
+    public Response getByUserId(Long userId){
         try {
             log.info("获取用户绑定的所有房屋；userId="+userId);
             List<House> byUserId = houseService.getByUserId(userId);
@@ -74,7 +109,28 @@ public class HouseController {
         }
         return new Response(1,"添加房屋信息出错");
     }
-
+    /**
+     * @Description: 获取房屋根据Id
+     * @Author: hang.qi
+     * @Date: 2020/12/16 0016 下午 5:39
+     */
+    @GetMapping("getById")
+    public Response getById(Long id){
+        try {
+            log.info("获取房屋根据Id；id="+id);
+            House byUserId = houseService.getById(id);
+            List<Image> imageByHouseId = imageService.getImageByHouseId(id);
+            User byId = userService.getById(byUserId.getUserId());
+            Map<String,Object> result = new HashMap<>();
+            result.put("house",byUserId);
+            result.put("image",imageByHouseId);
+            result.put("user",byId);
+            return new Response(result);
+        }catch (Exception e){
+            log.error("获取房屋根据Id出错",e);
+        }
+        return new Response(1,"获取房屋根据Id出错");
+    }
 
 
 

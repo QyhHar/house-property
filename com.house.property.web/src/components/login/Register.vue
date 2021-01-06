@@ -53,7 +53,7 @@ import api from '../../api/user.api'
           this.$message({
             type: 'error',
             message: '请输入英文字母!'
-          })
+          });
           return false;
         }
         api.register(this.user).then(res => {
@@ -64,7 +64,7 @@ import api from '../../api/user.api'
             })
             setTimeout(()=>{
               this.$router.push('/login')
-            },2000) 
+            },2000)
           }else{
             this.message({
               message: res.message,
@@ -72,9 +72,9 @@ import api from '../../api/user.api'
             })
           }
         });
-        
 
-        
+
+
       }
     }
   }

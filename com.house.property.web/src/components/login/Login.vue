@@ -1,13 +1,18 @@
 <template>
   <div id="login">
     <div class="login-nav">
-      <div class="logo"><img src="../../assets/login/logo.png"></div>
+      <div class="logo" @click="$router.push('/house')"><img src="../../assets/login/logo.png"></div>
     </div>
     <div class="login-center">
       <div class="inner">
         <h2>账号密码登陆</h2>
         <el-input v-model="userName" placeholder="请输入用户名/账号" prefix-icon="el-icon-user" class="account"></el-input>
         <el-input v-model="password" placeholder="请输入密码"  prefix-icon="el-icon-unlock" class="account" show-password></el-input>
+        <div style="overflow: hidden">
+          <el-input v-model="code" placeholder="请输入验证码" style="width: 70%;float: left"  prefix-icon="el-icon-link" class="account" ></el-input>
+          <img :src="captchaCode" @click="getCode"  style="width: 100px;height: 40px;float: right;padding-top: 10px"/>
+        </div>
+
         <div class="optionalRules">
           <el-checkbox v-model="checked">记住密码</el-checkbox>
           <p @click="$router.push('/register')">立即注册</p>
@@ -27,12 +32,16 @@
       return {
         userName: '',
         password:'',
+        code:'',
+        uuid:'',
         checked: true,
+        captchaCode:'',
       }
     },
     created() {
       //判断是否记住密码
       this.getCookie();
+      this.getCode();
     },
     methods:{
       //读取cookie
@@ -58,7 +67,9 @@
       login(){
         let data={
           userName:this.userName,
-          password:this.password
+          password:this.password,
+          code:this.code,
+          uuid:this.uuid,
         }
         api.login(data).then(res => {
           if(res.code==0){
@@ -108,6 +119,12 @@
           ";path=/;expires=" +
           exdate.toGMTString();
       },
+      getCode(){
+        api.getCode({width:100,height:40}).then(res => {
+          this.captchaCode= res.data.captchaCode;
+          this.uuid = res.data.uuid;
+        });
+      },
 
     }
 
@@ -140,7 +157,7 @@
     border-bottom:#ececec 1px solid;
     .inner{
       width: 400px;
-      height: 320px;
+      height: 370px;
       padding: 35px 45px;
       background-color: #fff;
       margin: 100px auto 0px;

@@ -20,4 +20,8 @@ public interface BaseService<T> {
 
     IPage<T> selectPageByCondition(IPage<T> page , QueryWrapper<T> selectWrapper);
 
+    List<T> selectListByQuery(T T, QueryWrapper<T> wrapper);
+
+    IPage<T> selectPageByQuery(IPage<T> page ,T T, QueryWrapper<T> wrapper);
+
 }

@@ -5,25 +5,26 @@
                 <!-- 导航 -->
                 <div class="wrap-top">
                     <div class="fl">
-                      <div class="logo"><img src="../../assets/login/logo1.png"></div>
+                      <div class="logo" ><img src="../../assets/login/logo1.png"></div>
                     </div>
                     <div class="fr">
                         <ul>
                             <li @click="$router.push('/houseBuy')">买房</li>
-                            <li @click="$router.push('/houseAdd')">卖房</li>
+                            <li @click="goHouseAdd(0)" >卖房</li>
                             <li @click="$router.push('/houseRenting')">租房</li>
-                            <li @click="$router.push('/houseAdd')">出租</li>
+                            <li  @click="goHouseAdd(1)">出租</li>
                         </ul>
                         <div class="backstage" v-if="userInfo.type==1">后台管理</div>
 
                         <div class="loginReg" >
-                          <el-dropdown :hide-timeout="1000" @command="handleCommand">
-                            <span>{{ userInfo.nickName? `欢迎您，${userInfo.nickName}` : 'admin' }}</span>
-                            <el-dropdown-menu slot="dropdown">
-                              <el-dropdown-item  @click="$router.push('/login')">退出登录</el-dropdown-item>
-                            </el-dropdown-menu>
-                          </el-dropdown>
-                          <div v-if="userInfo" class="userName">欢迎您，{{userInfo.nickName}}
+
+                          <div v-if="userInfo.nickName">
+                            <el-dropdown @command="handleCommand">
+                              <span>{{ userInfo.nickName? `欢迎您，${userInfo.nickName}` : 'admin' }}</span>
+                              <el-dropdown-menu slot="dropdown" style="margin-top: -6px">
+                                <el-dropdown-item   command="outLogin" >退出登录</el-dropdown-item>
+                              </el-dropdown-menu>
+                            </el-dropdown>
                           </div>
                           <div v-else >
                             <svg-icon icon-class="head-icon"></svg-icon>
@@ -107,9 +108,28 @@ export default {
     }
   },
   methods:{
-        handleClick(tab, event) {
+    handleClick(tab, event) {
+    },
+    handleCommand(command){
+      if(command == "outLogin")
+      sessionStorage.removeItem("userInfo");
+      this.$router.push('/login')
+    },
+    goHouseAdd(val){
+      if(this.userInfo.nickName){
+        this.$router.push({
+          path: "/houseAdd",
+          query: { type: val },
+        });
+      }else {
+        this.$message({
+          message: '请登录',
+          type: 'warning'
+        });
+        this.$router.push('/login')
       }
     }
+  }
 }
 </script>
 
@@ -162,6 +182,9 @@ export default {
 
             }
             .loginReg{
+              .el-popper[x-placement^=bottom] {
+                margin-top: -10px!important;
+              }
               width: 15%;
               float: right;
               i{

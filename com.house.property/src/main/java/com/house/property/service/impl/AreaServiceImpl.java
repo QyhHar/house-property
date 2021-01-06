@@ -34,14 +34,8 @@ public class AreaServiceImpl extends BaseServiceImpl<Area> implements AreaServic
     }
 
     @Override
-    public TreeNode getTreeArea() {
-        Area area = areaMapper.selectById(0L);
-        TreeNode treeNode = new TreeNode();
-        treeNode.setId(area.getId());
-        treeNode.setName(area.getName());
-        treeNode.setParentId(0L);
-        treeNode.setChildren(getChildArea(area.getId()));
-        return treeNode;
+    public List<TreeNode> getTreeArea() {
+        return getChildArea(0L);
     }
 
     public List<TreeNode> getChildArea(Long parentId){
@@ -49,10 +43,13 @@ public class AreaServiceImpl extends BaseServiceImpl<Area> implements AreaServic
         List<Area> byParentId = getByParentId(parentId);
         for (Area area: byParentId) {
             TreeNode treeNode = new TreeNode();
-            treeNode.setId(area.getId());
-            treeNode.setName(area.getName());
-            treeNode.setParentId(area.getParentId());
-            treeNode.setChildren(getChildArea(area.getId()));
+            treeNode.setValue(area.getId());
+            treeNode.setLabel(area.getName());
+            treeNode.setParentValue(area.getParentId());
+            List<TreeNode> trees = getChildArea(area.getId());
+            if(trees.size()>0){
+                treeNode.setChildren(trees);
+            }
             treeNodes.add(treeNode);
         }
         return treeNodes;

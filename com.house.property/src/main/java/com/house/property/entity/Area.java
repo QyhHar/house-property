@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Description: 区域实体
  * @Author: hang.qi
@@ -13,7 +15,7 @@ import lombok.Data;
  */
 @TableName("yd_area")
 @Data
-public class Area implements java.io.Serializable {
+public class Area implements Serializable {
 
 
     private static final long serialVersionUID = -5720645315623353870L;

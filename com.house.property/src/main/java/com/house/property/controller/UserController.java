@@ -1,8 +1,10 @@
 package com.house.property.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.house.property.entity.User;
 import com.house.property.service.UserService;
 import com.house.property.utils.MD5Util;
+import com.house.property.utils.RedisCache;
 import com.house.property.utils.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.StringUtils;
@@ -22,6 +24,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private CaptchaImageController captchaImageController;
 
     /**
      * @Description: 校验登录,
@@ -33,7 +37,7 @@ public class UserController {
         log.info("校验登录名；userName="+userName);
         User userByUserName = userService.getUserByUserName(userName);
         if(userByUserName==null) return new Response(0,"登录名合法");
-        return new Response(1,"登录名不合法");
+        return new Response(1,"登录名已存在");
     }
 
     /**
@@ -42,13 +46,14 @@ public class UserController {
      * @Date: 2020/12/16 0016 下午 5:36
      */
     @PostMapping("login")
-    public Response signIn(@RequestBody User user){
+    public Response signIn(@RequestBody JSONObject jsonObject){
         try {
             log.info("登录接口");
-
-            User userByUserName = userService.getUserByUserName(user.getUserName());
+            Boolean aBoolean = captchaImageController.checkCode(jsonObject.getString("uuid"), jsonObject.getString("code"));
+            if(!aBoolean)return new Response(1,"验证码不正确");
+            User userByUserName = userService.getUserByUserName(jsonObject.getString("userName"));
             if(userByUserName==null) return new Response(1,"用户名和密码不匹配");
-            if(StringUtils.equals(userByUserName.getPassword(),MD5Util.getMD5Str(user.getPassword()))){
+            if(StringUtils.equals(userByUserName.getPassword(),MD5Util.getMD5Str(jsonObject.getString("password")))){
                 return new Response(userByUserName);
             }
             return new Response(1,"用户名和密码不匹配");

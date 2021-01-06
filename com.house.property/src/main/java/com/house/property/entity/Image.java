@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author hang.qi
  * @program: property
@@ -13,7 +15,7 @@ import lombok.Data;
  */
 @TableName("yd_image")
 @Data
-public class Image implements java.io.Serializable {
+public class Image implements Serializable {
 
 
     private static final long serialVersionUID = -5431848296646477252L;

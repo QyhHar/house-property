@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface AreaService extends BaseService<Area> {
     List<Area> getByParentId(Long parentId);
-    TreeNode getTreeArea();
+    List<TreeNode> getTreeArea();
 }

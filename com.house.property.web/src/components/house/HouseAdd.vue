@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="m-jumbotron">
-      <div class="tit">发布出售房源</div>
+      <div class="tit">发布{{type==0?`出售`:`出租`}}房源</div>
       <div class="sub-tit">数万线下门店 · 快速全城推广 · 专业经纪人服务</div>
     </div>
     <div class="m-form">
@@ -51,7 +51,7 @@
                   <div class="unit">元/月</div>
                 </dd>
             </dl>
-            <dl>
+            <dl v-if="type==1">
                 <dt>出租方式</dt>
                 <dd>
                     <div class="u-select u-select-build">
@@ -128,6 +128,7 @@ export default {
             label: '设计原则',
             }],
         }],
+        type:'0',
         formData:{
           areaId:'',//区域id
           residential:'',//小区
@@ -150,7 +151,9 @@ export default {
         }
       };
     },
-  
+  props: {
+  },
+
   components:{
     Head,
   },
@@ -167,7 +170,7 @@ export default {
           // if(res.code===0){
           //    
           // }else{
-            
+
           // }
       });
 
@@ -176,7 +179,8 @@ export default {
   created(){
     api.getChildArea().then(res => {
       this.options=res.data;
-    })
+    });
+    this.type=this.$route.query.type;
   }
 }
 </script>
@@ -213,7 +217,7 @@ export default {
     .el-tabs__item.is-active{
       color: #3072F6;
     }
-    
+
   }
   }
   .m-jumbotron {
@@ -247,7 +251,7 @@ export default {
         overflow: hidden;
         compact {
           padding: 0 0 25px;
-          line-height: 1; 
+          line-height: 1;
         }
         dt{
           float: left;

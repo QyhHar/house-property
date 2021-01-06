@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Description: 用户实体
  * @Author: hang.qi
@@ -13,7 +15,7 @@ import lombok.Data;
  */
 @TableName("yd_user")
 @Data
-public class User implements java.io.Serializable {
+public class User implements Serializable {
 
 
     private static final long serialVersionUID = 6088234006911030467L;
