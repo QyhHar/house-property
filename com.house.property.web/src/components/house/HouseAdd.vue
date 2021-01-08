@@ -11,7 +11,7 @@
     </div>
     <div class="m-jumbotron">
       <div class="tit">发布{{type==0?`出售`:`出租`}}房源</div>
-      <div class="sub-tit">数万线下门店 · 快速全城推广 · 专业经纪人服务</div>
+      <div class="sub-tit">快速全城推广 · 数万优质用户 · 专业团队服务</div>
     </div>
     <div class="m-form">
       <div class="form-box">
@@ -26,7 +26,7 @@
                 <dt>小区</dt>
                 <dd class="wrap-sug">
                     <div class="u-sug" id="u-sug">
-                        <input v-model="house.residential"  type="text" autocomplete="off" placeholder="请输入小区名">
+                        <input v-model="formData.residential"  type="text" autocomplete="off" placeholder="请输入小区名">
                     </div>
                 </dd>
             </dl>
@@ -34,21 +34,21 @@
                 <dt>房屋地址</dt>
                 <dd>
                     <div class="u-select u-select-build">
-                        <input  placeholder="楼栋号"  type="text" >
+                        <input v-model="address1"  placeholder="楼栋号"  type="text" >
                     </div>
                     <div class="u-select u-select-build">
-                        <input placeholder="单元号" type="text">
+                        <input v-model="address2" placeholder="单元号" type="text">
                     </div>
                     <div class="u-select u-select-build">
-                        <input placeholder="门牌号" type="text">
+                        <input v-model="address3" placeholder="门牌号" type="text">
                     </div>
                 </dd>
             </dl>
             <dl>
-                <dt>期望租金</dt>
+                <dt>期望{{type==0?'售价':'租金'}}</dt>
                 <dd>
-                  <input name="expectation_price" type="text" placeholder="请输入您期望租出的价格" style="width: 210px;">
-                  <div class="unit">元/月</div>
+                  <input name="expectation_price" type="text" placeholder="请输入您期望的价格" style="width: 210px;">
+                  <div class="unit">{{type==0?'万元':'元/月'}}</div>
                 </dd>
             </dl>
             <dl v-if="type==1">
@@ -89,8 +89,8 @@
             </dl>
         </div>
       </div>
-      <p class="tips">提示：您点击“提交委托”后，若您的房源通过平台初步审核，将会由平台上的经纪人和您取得联系，并对您的房源进行再次核实，核实无误后将与您建立服务关系。贝壳平台仅提供信息展示和网络技术服务。</p>
-      <div class="m-submit" @click="handleSubmit()">提交委托</div>
+      <p class="tips">提示：您点击“{{type==0?'确认发布':'提交委托'}}”后，若您的房源通过平台初步审核，将会由平台上的经纪人和您取得联系，并对您的房源进行再次核实，核实无误后将与您建立服务关系。贝壳平台仅提供信息展示和网络技术服务。</p>
+      <div class="m-submit" @click="handleSubmit()">{{type==0?'确认发布':'提交委托'}}</div>
     </div>
   </div>
 </template>
@@ -128,6 +128,10 @@ export default {
             label: '设计原则',
             }],
         }],
+        address1:'',
+        address2:'',
+        address3:'',
+
         activeName: 'first',
         type:'0',
         formData:{
@@ -148,7 +152,7 @@ export default {
           rent:'',//租金(每月)
           phoneNumber:'',//手机号码
           userId:'',//用户Id
-          rentType:'1',//出租类型
+          rentalType:'1',//出租类型 1:-整租；2-合租
         }
       };
     },
@@ -170,8 +174,9 @@ export default {
       this.initData();
     },
     initData(){
+      this.houseAddress=address1+address2+address3;
       api.houseAdd(this.formData).then(res => {
-          console.log(res,'res111111');
+          //console.log(res,'res111111');
           // if(res.code===0){
           //    
           // }else{
@@ -294,9 +299,8 @@ export default {
           margin-right: 0!important;
         }
         .u-select.u-select-build input {
-          height: 30px;
-          padding: 5px 0;
-          line-height: 25px;
+          height: 40px;
+          line-height: 40px;
           background-color: transparent;
         }
         .u-select, .u-sug li:hover {

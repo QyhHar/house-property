@@ -10,7 +10,7 @@
         <el-input v-model="password" placeholder="请输入密码"  prefix-icon="el-icon-unlock" class="account" show-password></el-input>
         <div style="overflow: hidden">
           <el-input v-model="code" placeholder="请输入验证码" style="width: 70%;float: left"  prefix-icon="el-icon-link" class="account" ></el-input>
-          <img :src="captchaCode" @click="getCode"  style="width: 100px;height: 40px;float: right;padding-top: 10px"/>
+          <img :src="captchaCode" @click="getCode"  style="width: 100px;height: 50px;float: left;margin-top: 5px ; margin-left:10px">
         </div>
 
         <div class="optionalRules">
@@ -120,7 +120,7 @@
           exdate.toGMTString();
       },
       getCode(){
-        api.getCode({width:100,height:40}).then(res => {
+        api.getCode({width:200,height:50}).then(res => {
           this.captchaCode= res.data.captchaCode;
           this.uuid = res.data.uuid;
         });
