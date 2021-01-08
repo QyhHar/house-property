@@ -10,9 +10,9 @@
                     <div class="fr">
                         <ul>
                             <li @click="$router.push('/houseBuy')">买房</li>
-                            <li @click="goHouseAdd(0)" >卖房</li>
+                            <li @click="goHouseAdd('1')" >卖房</li>
                             <li @click="$router.push('/houseRenting')">租房</li>
-                            <li  @click="goHouseAdd(1)">出租</li>
+                            <li  @click="goHouseAdd('2')">出租</li>
                         </ul>
                         <div class="backstage" v-if="userInfo.type==1">后台管理</div>
 

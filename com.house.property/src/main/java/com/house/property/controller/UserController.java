@@ -69,9 +69,12 @@ public class UserController {
      * @Date: 2020/12/16 0016 下午 5:37
      */
     @PostMapping("register")
-    public Response register(@RequestBody User user){
+    public Response register(@RequestBody JSONObject jsonObject){
         try {
             log.info("注册接口");
+            Boolean aBoolean = captchaImageController.checkCode(jsonObject.getString("uuid"), jsonObject.getString("code"));
+            if(!aBoolean)return new Response(1,"验证码不正确");
+            User user = jsonObject.toJavaObject(User.class);
             user.setPassword(MD5Util.getMD5Str(user.getPassword()));
             userService.save(user);
             return new Response("注册成功");

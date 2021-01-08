@@ -64,7 +64,7 @@ public class AreaController {
      * @Date: 2020/12/23 0023 下午 4:24
      */
     @GetMapping("getChildArea")
-    public Response getChildArea(Long parentId){
+    public Response getChildArea(String parentId){
         try {
             log.info("获取子区域；parentId"+parentId);
             List<Area> byParentId = areaService.getByParentId(parentId);

@@ -15,8 +15,14 @@ async function getCode(params) {
   return await http.get('/captcha/getCode', params)
 }
 
+//校验账号
+async function getUserName(params) {
+  return await http.get('/user/getUserName', params)
+}
+
 export default{
   register,
   login,
   getCode,
+  getUserName,
 }

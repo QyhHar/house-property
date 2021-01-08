@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,4 +51,30 @@ public class HouseServiceImpl extends BaseServiceImpl<House> implements HouseSer
         return null;
     }
 
+    public IPage<House> selectPageByMap(IPage<House> page ,Map<String,List<String>> map, QueryWrapper<House> wrapper) {
+        getWrapperByMap(map,wrapper);
+        return houseMapper.selectPage(page,wrapper);
+    }
+    public void getWrapperByMap(Map<String,List<String>> map, QueryWrapper<House> wrapper){
+        for (Map.Entry<String,List<String>> entry: map.entrySet()) {
+            if(entry.getValue().size()>0)
+            wrapper.and(wrp->{
+                for (int i = 0; i < entry.getValue().size() ; i++) {
+                    String value = String.valueOf(entry.getValue().get(i));
+                    childWrapper(entry.getKey(), humpToLine(value), wrp);
+                    if(i!=entry.getValue().size()-1)wrp.or();
+                }
+            });
+        }
+    }
+    public void childWrapper(String key,String value,QueryWrapper<House> wrapper){
+        if(value.contains("-")){
+            String[] str = value.split("-");
+            if(str.length==2&&str[0].matches("\\d+")&&str[1].matches("\\d+")){
+                wrapper.between(humpToLine(key),str[0],str[1]);
+            }
+        }else {
+            wrapper.eq(humpToLine(key),value);
+        }
+    }
 }

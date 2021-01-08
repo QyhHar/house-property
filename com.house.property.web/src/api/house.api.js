@@ -10,8 +10,14 @@ async function houseAdd(params) {
   return await http.post('/house/save', params)
 }
 
+//查询
+async function getHouseByQuery(params) {
+  return await http.post('/house/getByQuery', params)
+}
+
 
 export default{
   getChildArea,
   houseAdd,
+  getHouseByQuery,
 }

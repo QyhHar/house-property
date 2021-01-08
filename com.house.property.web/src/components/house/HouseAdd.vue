@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="m-jumbotron">
-      <div class="tit">发布{{type==0?`出售`:`出租`}}房源</div>
+      <div class="tit">发布{{type=='1'?`出售`:`出租`}}房源</div>
       <div class="sub-tit">快速全城推广 · 数万优质用户 · 专业团队服务</div>
     </div>
     <div class="m-form">
@@ -19,7 +19,7 @@
             <dl class="compact">
                 <dt>小区所在城市</dt>
                 <dd>
-                  <el-cascader :options="options" style="width:100%" ></el-cascader>
+                  <el-cascader v-model="formData.areaId" :options="options" style="width:100%" clearable ></el-cascader>
                 </dd>
             </dl>
             <dl>
@@ -44,52 +44,134 @@
                     </div>
                 </dd>
             </dl>
-            <dl>
-                <dt>期望{{type==0?'售价':'租金'}}</dt>
+          <dl>
+            <dt>厅室</dt>
+            <dd>
+              <div class="u-select u-select-build">
+                <input v-model="formData.room"  placeholder="几室"  type="text" >
+              </div>
+              <div class="u-select u-select-build">
+                <input v-model="formData.office"  placeholder="几厅"  type="text" >
+              </div>
+            </dd>
+          </dl>
+          <dl>
+            <dt>面积</dt>
+            <dd>
+              <div class="u-select u-select-build">
+                <input name="contact"  v-model="formData.measureArea" type="text" placeholder="您房子的面积"  style="width: 250px;">
+              </div>
+            </dd>
+          </dl>
+          <dl>
+            <dt>方位信息</dt>
+            <dd>
+              <div class="u-select u-select-build">
+                <input v-model="formData.floor"  placeholder="几楼"  type="text" >
+              </div>
+              <div class="u-select u-select-build">
+                <input v-model="formData.buildingAge"  placeholder="楼龄"  type="text" >
+              </div>
+              <div class="u-select u-select-build">
+                <el-select v-model="formData.orientation" placeholder="朝向">
+                  <el-option
+                    v-for="item in orientations"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </div>
+            </dd>
+          </dl>
+          <dl>
+            <dt>房屋类型</dt>
+            <dd>
+              <div class="u-select u-select-build">
+                <el-select v-model="formData.purpose" placeholder="用途">
+                  <el-option
+                    v-for="item in purposes"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </div>
+              <div class="u-select u-select-build">
+                <el-select v-model="formData.heating" placeholder="供暖">
+                  <el-option
+                    v-for="item in heatings"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </div>
+            </dd>
+          </dl>
+
+            <dl v-if="type=='1'">
+                <dt>期望售价</dt>
                 <dd>
-                  <input name="expectation_price" type="text" placeholder="请输入您期望的价格" style="width: 210px;">
-                  <div class="unit">{{type==0?'万元':'元/月'}}</div>
+                  <input  v-model="formData.totalPrice" name="expectation_price" type="text" placeholder="请输入您期望的价格" style="width: 210px;">
+                  <div class="unit">万元</div>
+                  <div style="margin-left: 60px">单价约 {{(formData.totalPrice&&formData.measureArea)?(formData.totalPrice/formData.measureArea).toFixed(2):0}} 万元/m²</div>
                 </dd>
             </dl>
-            <dl v-if="type==1">
+
+          <dl v-if="type=='2'">
+            <dt>期望租金</dt>
+            <dd>
+              <input v-model="formData.rent" name="expectation_price" type="text" placeholder="请输入您期望的价格" style="width: 210px;">
+              <div class="unit">元/月</div>
+            </dd>
+          </dl>
+            <dl v-if="type=='2'">
                 <dt>出租方式</dt>
                 <dd>
-                    <div class="u-select u-select-build">
-                        <el-select v-model="formData.rentType" placeholder="请选择">
-                          <el-option
-                            v-for="item in options1"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
-                    </div>
+                  <div class="u-select u-select-build">
+                    <el-select v-model="formData.rentalType" placeholder="请选择">
+                      <el-option
+                        v-for="item in rentalTypes"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </div>
                 </dd>
             </dl>
-            <dl>
-              <dt>称呼</dt>
-              <dd>
-                <input name="contact" type="text" placeholder="我们应该如何称呼您"  style="width: 250px;">
-              </dd>
-            </dl>
+
             <dl>
                 <dt>手机号码</dt>
                 <dd>
-                    <input name="phone" type="text" placeholder="您的联系方式，方便我们及时与您联系" style="width: 250px;">
+                    <input name="phone" v-model="formData.phoneNumber" type="text" placeholder="您的联系方式，方便我们及时与您联系" style="width: 250px;">
                 </dd>
             </dl>
             <dl>
                 <dt>图形验证码</dt>
                 <dd>
-                    <input name="verify_code" type="text" placeholder="请输入图形验证码中的结果"  style="width: 170px;">
-                    <div class="btn-getcode-sms">
-                      <img src="/aj/get/imgCode" alt="验证码图片">
-                    </div>
+                    <input v-model="formData.code" name="verify_code" type="text" placeholder="请输入图形验证码中的结果"  style="width: 170px;">
+                    <img   @click="getCode":src="formData.captchaCode" alt="验证码图片" style="width: 100px;height: 50px;float: right;">
                 </dd>
             </dl>
+          <dl>
+            <dt>上传图片</dt>
+            <dd>
+              <el-upload
+                action="#"
+                :http-request="uploadSectionFile"
+                :show-file-list="false"
+                multiple
+              >
+                <el-button size="mini" >点击上传</el-button>
+              </el-upload>
+            </dd>
+          </dl>
+
         </div>
       </div>
-      <p class="tips">提示：您点击“{{type==0?'确认发布':'提交委托'}}”后，若您的房源通过平台初步审核，将会由平台上的经纪人和您取得联系，并对您的房源进行再次核实，核实无误后将与您建立服务关系。贝壳平台仅提供信息展示和网络技术服务。</p>
+      <p class="tips">提示：您点击“{{type=='1'?'确认发布':'提交委托'}}”后，若您的房源通过平台初步审核，将会由平台上的经纪人和您取得联系，并对您的房源进行再次核实，核实无误后将与您建立服务关系。贝壳平台仅提供信息展示和网络技术服务。</p>
       <div class="m-submit" @click="handleSubmit()">{{type==0?'确认发布':'提交委托'}}</div>
     </div>
   </div>
@@ -98,36 +180,21 @@
 <script>
 import Head from "../head/Head/Head";
 import api from "../../api/house.api"
+import userApi from "../../api/user.api"
 export default {
   data() {
       return {
-        options1: [{
-          value: '1',
-          label: '整租'
-        }, {
-          value: '2',
-          label: '合租'
-        }],
+        rentalTypes: [{value: '1', label: '整租'}, {value: '2', label: '合租'}],
+        heatings: [{value: '1', label: '集中供暖'}, {value: '2', label: '自供暖'}],
+        orientations: [{value: '5', label: '南北'}, {value: '2', label: '朝南'},{value: '1', label: '朝北'},
+          {value: '4', label: '朝东'}, {value: '3', label: '朝西'}],
+        purposes: [{value: '1', label: '普通住宅'}, {value: '2', label: '商业类'},
+          {value: '3', label: '别墅'}, {value: '4', label: '四合院'},
+          {value: '5', label: '车位'}, {value: '6', label: '其他'}],
 
 
-        house:{
-
-        },
-        options:[{
-          value: 'zhinan',
-          label: '指南',
-          children: [{
-            value: 'shejiyuanze',
-            label: '设计原则',
-            }],
-        },{
-          value: 'zhinan',
-          label: '指南',
-          children: [{
-            value: 'shejiyuanze',
-            label: '设计原则',
-            }],
-        }],
+        userInfo:{},
+        options:[],
         address1:'',
         address2:'',
         address3:'',
@@ -153,7 +220,11 @@ export default {
           phoneNumber:'',//手机号码
           userId:'',//用户Id
           rentalType:'1',//出租类型 1:-整租；2-合租
-        }
+          uuid:'',
+          captchaCode:'',
+          code:'',
+        },
+        uploadFile:[],
       };
     },
   props: {
@@ -163,19 +234,71 @@ export default {
     Head,
   },
   methods:{
+    uploadSectionFile(param) {
+      let fileObj = param.file;
+      const isLt2M = fileObj.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+        return;
+      }
+      let uploadFile='';
+      if (fileObj.type === "image/jpeg") {
+        uploadFile = new File([fileObj], new Date().getTime() + ".jpg", {
+          type: "image/jpeg",
+        });
+      } else if (fileObj.type === "image/png") {
+        uploadFile = new File([fileObj], new Date().getTime() + ".png", {
+          type: "image/png",
+        });
+      } else {
+        this.$message.error("只能上传jpg/png文件");
+        return;
+      }
+      if(uploadFile) this.uploadFile.push(uploadFile);
+    },
+    getCode() {
+      userApi.getCode({width: 200, height: 50}).then(res => {
+        this.formData.captchaCode = res.data.captchaCode;
+        this.formData.uuid = res.data.uuid;
+      });
+    },
     getType(val){
       this.type=val;
     },
     handleClick(tab, event) {
-      if(tab.name==='first') this.type='0';
-      if(tab.name==='second') this.type='1';
+      if(tab.name==='first') {
+        this.type='1';
+      }
+      if(tab.name==='second') {
+        this.type='2';
+      }
     },
     handleSubmit(){
       this.initData();
     },
     initData(){
-      this.houseAddress=address1+address2+address3;
-      api.houseAdd(this.formData).then(res => {
+      this.formData.houseAddress=this.address1+(this.address1.indexOf('栋')===-1?'栋':'')+this.address2
+              +(this.address1.indexOf('单元')===-1?'单元':'')+this.address3+(this.address1.indexOf('号')===-1?'号':'');
+      this.formData.userId=this.userInfo.id;
+      this.formData.type=this.type;
+      debugger
+      this.formData.areaId=this.formData.areaId.length===0?'0':this.formData.areaId[this.formData.areaId.length-1];
+      this.formData.unitPrice = (this.formData.totalPrice/this.formData.measureArea).toFixed(2);
+      if(this.formData.type==='2'&&!this.formData.totalPrice)this.formData.totalPrice='0';
+      if(this.formData.type==='1'&&!this.formData.rent)this.formData.rent='0';
+      for(let key in this.formData) {
+        if (!this.formData[key]){
+          this.$message.error("有必填字段需要填写");
+          return ;
+        }
+      }
+      let param = new FormData(); // FormData 对象
+      this.uploadFile.forEach(item=>{
+        param.append("file", item); // 文件对象
+      });
+      param.append("obj",JSON.stringify(this.formData)); // 其他参数
+      api.houseAdd(param).then(res => {
+        debugger
           //console.log(res,'res111111');
           // if(res.code===0){
           //    
@@ -187,11 +310,15 @@ export default {
     }
   },
   created(){
+    if (sessionStorage.userInfo) {
+      this.userInfo = JSON.parse(sessionStorage.userInfo);
+    }
     api.getChildArea().then(res => {
       this.options=res.data;
     });
     this.type=this.$route.query.type;
-    if(this.type==1)this.activeName='second'
+    if(this.type=='2')this.activeName='second';
+    this.getCode();
   }
 }
 </script>
@@ -312,7 +439,7 @@ export default {
         }
         .btn-getcode-sms {
           float: right;
-          width: 145px;
+          width: 100px;
           line-height: 38px;
           text-align: center;
           border: 1px solid #ddd;

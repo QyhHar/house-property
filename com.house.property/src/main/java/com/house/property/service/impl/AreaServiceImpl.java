@@ -1,17 +1,18 @@
 package com.house.property.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.house.property.controller.AreaController;
 import com.house.property.entity.Area;
 import com.house.property.mapper.AreaMapper;
 import com.house.property.service.AreaService;
 import com.house.property.service.base.BaseServiceImpl;
+import com.house.property.utils.RedisCache;
 import com.house.property.utils.TreeNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author hang.qi
@@ -27,7 +28,7 @@ public class AreaServiceImpl extends BaseServiceImpl<Area> implements AreaServic
     private AreaMapper areaMapper;
 
     @Override
-    public List<Area> getByParentId(Long parentId) {
+    public List<Area> getByParentId(String parentId) {
         QueryWrapper<Area> query = new QueryWrapper<>();
         query.lambda().eq(Area::getParentId,parentId);
         return areaMapper.selectList(query);
@@ -35,10 +36,15 @@ public class AreaServiceImpl extends BaseServiceImpl<Area> implements AreaServic
 
     @Override
     public List<TreeNode> getTreeArea() {
-        return getChildArea(0L);
+        return getChildArea("0");
     }
 
-    public List<TreeNode> getChildArea(Long parentId){
+    @Override
+    public List<String> getAreaIdByParentId(List<String> parentIds) {
+        return getChildAreaId(parentIds);
+    }
+
+    public List<TreeNode> getChildArea(String parentId){
         List<TreeNode> treeNodes  = new ArrayList<>();
         List<Area> byParentId = getByParentId(parentId);
         for (Area area: byParentId) {
@@ -53,5 +59,21 @@ public class AreaServiceImpl extends BaseServiceImpl<Area> implements AreaServic
             treeNodes.add(treeNode);
         }
         return treeNodes;
+    }
+    public List<String> getChildAreaId(List<String> parentIds){
+        Set<String> result = new HashSet<>();
+        for (String parentId: parentIds) {
+            List<Area> byParentId = getByParentId(parentId);
+            for (Area area: byParentId) {
+                result.add(area.getId());
+                List<String> areaId = new ArrayList<>();
+                areaId.add(area.getId());
+                List<String> trees = getChildAreaId(areaId);
+                if(trees.size()>0){
+                    result.addAll(trees);
+                }
+            }
+        }
+        return  new ArrayList<String>(result);
     }
 }

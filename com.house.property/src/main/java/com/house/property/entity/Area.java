@@ -20,7 +20,7 @@ public class Area implements Serializable {
 
     private static final long serialVersionUID = -5720645315623353870L;
     @TableId(type = IdType.AUTO)
-    private Long id;
+    private String id;
     private String name;//区域名
     private Long parentId; //父节点ID
 

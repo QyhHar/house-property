@@ -2,6 +2,7 @@ package com.house.property.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,10 +17,15 @@ import java.util.Date;
  * @date 2020-12-24 17:42:10
  */
 @Slf4j
+@Component
 public class ImageUtil {
 
-    @Value("${upload.image.address}")
     private static String imagePath;
+
+    @Value("${upload.image.imagePath}")
+    public  void setPath(String imagePath) {
+        this.imagePath= imagePath;
+    }
 
     /**
      * @Description:
@@ -35,7 +41,7 @@ public class ImageUtil {
             suffix = suffix.toLowerCase();
             if(suffix.equals(".jpg") || suffix.equals(".jpeg") || suffix.equals(".png") || suffix.equals(".gif")){
                 SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-                SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddhhmmss");
+                SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddhhmmssSSS");
                 String path = imagePath+format.format(new Date())+"/";
                 String name = format1.format(new Date());
                 log.info("path:" + path);
@@ -45,6 +51,7 @@ public class ImageUtil {
                 if(!targetFile.getParentFile().exists()){    //注意，判断父级路径是否存在
                     targetFile.getParentFile().mkdirs();
                 }
+                file.transferTo(targetFile);
                return path+fileName;
             }else{
                 log.error("图片格式不对");

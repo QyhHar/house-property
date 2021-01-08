@@ -15,7 +15,7 @@ import java.util.List;
 public class TreeNode implements Serializable {
 
     private static final long serialVersionUID = -8851339945708415816L;
-    private Long value;
+    private String value;
     private String label;
     private Long parentValue;
     private List<TreeNode> children;
