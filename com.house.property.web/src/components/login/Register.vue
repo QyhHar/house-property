@@ -44,7 +44,7 @@ import api from '../../api/user.api'
     name: 'register',
     data() {
       let validateUserName = (rule, value, callback) => {
-        debugger
+        // debugger
         if (!value ) {
           callback(new Error('请输入账户'));
         } else if(!/^[a-zA-Z0-9]+$/.test(value)){

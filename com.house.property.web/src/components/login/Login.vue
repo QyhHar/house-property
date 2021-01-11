@@ -65,6 +65,7 @@
         }
       },
       login(){
+        // debugger;
         let data={
           userName:this.userName,
           password:this.password,
