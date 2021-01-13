@@ -36,6 +36,7 @@ public class House implements Serializable {
     private Integer office;//几厅
     private String orientation;//朝向：1-北；2-南；3-西；4-东;5-南北
     private String floor;//几楼
+    private String sumFloor;//总共几楼
     private String buildingAge;//楼龄
     private String purpose;//用途：1-普通住宅；2-商业类；3-别墅；4四合院；5-车位；6-其他
     private String heating;//供暖：1-集中供暖；2-自供暖
@@ -45,6 +46,11 @@ public class House implements Serializable {
     private String phoneNumber;//手机号码
     private Long userId;//用户Id
     private Date addTime;
+
+    @TableField(exist=false)
+    private String isCollection;//是否被当前
+    @TableField(exist=false)
+    private Integer sumCollection;//收藏数
 
     @TableField(exist=false)
     private List<Image> images;

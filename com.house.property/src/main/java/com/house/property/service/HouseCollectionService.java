@@ -8,4 +8,6 @@ public interface HouseCollectionService extends BaseService<HouseCollection> {
 
     HouseCollection getOneByUserIdHouseId(HouseCollection houseCollection);
 
+    Integer getCountUserCollection(Long houseId);
+
 }

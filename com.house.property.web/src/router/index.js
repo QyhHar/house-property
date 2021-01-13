@@ -14,8 +14,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'login',
-      component: Login
+      name: 'house',
+      component: House
     },
     {
       path: '/login',
@@ -52,6 +52,6 @@ export default new Router({
       name: 'houseRenting',
       component: HouseRenting
     }
-    
+
   ]
 })

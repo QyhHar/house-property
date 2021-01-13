@@ -9,42 +9,49 @@
     </div>
     <div class="content">
       <div class="content-top">
-        <div class="fl">
-          <img src="../../assets/houseEdit/house-type-img.png">
+        <div class="fl" v-if="image.length">
+          <img :src="image[0].imageUrl" width="700" >
+        </div>
+        <el-button style="float: right" @click="doCollect(house.id,house.isCollection)"   size="mini">{{house.isCollection!=='1'?'关注':'已关注'}}</el-button>
+        <div class="fl" v-if="!image.length">
+          <img src="../../assets/login/login.jpg"  width="700">
         </div>
         <div class="fr">
-          <div class="value">
-            <span>154.5</span>万<p>17199元/平米</p>
+          <div v-if="house.type==='1'" class="value">
+            <span>{{house.totalPrice}}</span>万<p>{{house.unitPrice}}元/平米</p>
+          </div>
+          <div v-if="house.type==='2'" class="value">
+            <span>{{house.rent&&house.rent.substring(0,house.rent.length-3)}}</span>元/月<p>{{house.rentalType==='1'?'整租':'合租'}}</p>
           </div>
           <div class="introduce">
             <ul>
               <li>
-                <h3>3室2厅</h3>
-                <p>低楼层/共33层</p>
+                <h3>{{house.room +`室`+house.office+`厅 `}}</h3>
+                <p>{{house.floor +`楼`+`/共`+house.sumFloor+`层`}}</p>
               </li>
               <li>
-                <h3>南</h3>
-                <p>平层/精装</p>
+                <h3>{{getOrientation(house.orientation)}}</h3>
+                <p>{{house.addTime&&house.addTime.substring(0,10)+`发布`}}</p>
               </li>
               <li>
-                <h3>135平米</h3>
-                <p>2016年建/板塔结合</p>
+                <h3>{{house.measureArea}}平米</h3>
+                <p>{{(parseInt(house.addTime&&house.addTime.substring(0,4))-parseInt(house.buildingAge))+`年前建`}}</p>
               </li>
             </ul>
           </div>
           <div class="details">
             <ul>
               <li>
-                小区名称<i>华润二十四城</i>
+                小区名称<i>{{house.residential}}</i>
               </li>
               <li>
-                所在区域<i>未央</i>
+                所在区域<i>{{areaName}}</i>
               </li>
               <li>
-                信息编号<i>111113333</i>
+                信息编号<i>{{house.id}}</i>
               </li>
               <li>
-                联系电话<i>13649556688</i>
+                联系电话<i>{{house.phoneNumber}}</i>
               </li>
               <li>
                 风险提示
@@ -60,82 +67,164 @@
           <div class="basicAttributes">基本属性</div>
           <div class="basicContent">
             <ul>
-              <li>房屋户型<span>3室2厅2卫</span></li>
-              <li>所在楼层<span>低楼层（共33层）</span></li>
-              <li>建筑面积<span>120.8㎡</span></li>
-              <li>户型结构<span>平层</span></li>
-              <li>建筑类型<span>板塔结合</span></li>
-              <li>房屋朝向<span>南</span></li>
-              <li>建筑结构<span>钢混结构</span></li>
-              <li>装修情况<span>精装</span></li>
-              <li>梯户比例<span>两梯四户</span></li>
-              <li>供暖方式<span>集中供暖</span></li>
-              <li>配备电梯<span>有</span></li>
+              <li>房屋户型<span>{{house.room +`室`+house.office+`厅 `}}</span></li>
+              <li>所在楼层<span>{{house.floor +`楼`+`/共`+house.sumFloor+`层`}}</span></li>
+              <li>建筑面积<span>{{house.measureArea}}m²</span></li>
+              <li>房屋朝向<span>{{getOrientation(house.orientation)}}</span></li>
+              <li>供暖方式<span>{{house.heating==='1'?'集中供暖':'自供暖'}}</span></li>
+              <li>房屋地址<span>{{house.houseAddress}}</span></li>
+              <li>挂牌时间<span>{{house.addTime&&house.addTime.substring(0,10)}}</span></li>
+              <li>交易权属<span>{{getPurposes(house.purpose)}}</span></li>
             </ul>
           </div>
         </div>
-        <div class="information">
-          <div class="basicAttributes">交易属性</div>
-          <div class="basicContent">
-            <ul>
-              <li>挂牌时间<span>2020年12月23日</span></li>
-              <li>交易权属<span>商品楼</span></li>
-              <li>上次交易<span>暂无数据</span></li>
-              <li>房屋用途<span>普通住宅</span></li>
-              <li>房屋年限<span>暂无数据</span></li>
-              <li>产权所有<span>共有</span></li>
-              <li>抵押信息<span>有抵押</span></li>
-              <li>房本备件<span>详情咨询卖家</span></li>
-            </ul>
-          </div>
-        </div>
+<!--        <div class="information">-->
+<!--          <div class="basicAttributes">交易属性</div>-->
+<!--          <div class="basicContent">-->
+<!--            <ul>-->
+<!--              -->
+<!--            </ul>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="tips">
           特别提示：本房源所示信息仅供参考，购房时请以该房屋档案登记信息、产权证信息以及所签订合同条款约定为准；本房源公示信息不做为合同条款，不具有合同约束力。
         </div>
         <div class="tab">此房源照片</div>
-        <div class="demo-image__preview">
-          <el-image 
-            style="width: 100%; height:400px"
-            :src="url" 
-            :preview-src-list="srcList">
-          </el-image>
+        <div class="demo-image__preview"  v-for="(item, index) in image" :key="index" style="margin-bottom: 20px" >
+          <img :src="item.imageUrl" width="700" >
         </div>
       </div>
     </div>
-    
+
   </div>
 </template>
 
 <script>
   import Head from "../head/Head/Head";
+  import api from "../../api/house.api"
+  import collectApi from "../../api/collection.api";
 export default {
   components:{
     Head
+  },
+  data(){
+    return{
+      purposes: [{value: '1', label: '普通住宅'}, {value: '2', label: '商业类'},
+        {value: '3', label: '别墅'}, {value: '4', label: '四合院'},
+        {value: '5', label: '车位'}, {value: '6', label: '其他'}],
+      orientations:[{value:'1',label:'北'}, {value:'2',label:'南'}, {value:'3',label:'西'},
+        {value:'4',label:'东'},{value:'5',label:'南北'}],//朝向：1-北；2-南；3-西；4-东；5-南北
+
+      areaName:'',
+      houseId:'',
+      userInfo:{},
+      house:{},
+      image:{},
+      user:{},
+    }
   },
   methods:{
     open() {
         this.$alert('本站旨在为广大用户提供更丰富的信息，但由于部分信息通过技术手段生成，部分信息由第三方提供，我们持续通过技术和管理手段提升信息的准确度，但我们无法确保信息的真实性、准确性和完整性。房产交易滋事体大，本站信息不应作为您买卖决策的依据，您决策前应与房源业主核实相关信息、并亲自到房屋中核验信息，或以产权证明、政府类网站发布的官方信息为准。本站不对您交易过程中对本网站信息产生的依赖承担任何明示或默示的担保责任或任何责任。', '风险提示', {
           confirmButtonText: '确定',
-          callback: action => {
-            this.$message({
-              type: 'info',
-              message: `action: ${ action }`
-            });
-          }
         });
+      },
+    //关注
+    doCollect(houseId,val){
+      if(this.userInfo.id){
+        let collect = {
+          houseId:houseId,
+          userId:this.userInfo.id
+        };
+        if(val==='1'){
+          collectApi.deleteCollection(collect).then(res=>{
+            if(res.code===0) {
+              this.house.isCollection='0';
+              this.house.sumCollection--;
+            }else{
+              this.$message({
+                message: res.message,
+                type: 'warning'
+              })
+            }
+
+          })
+        }else {
+          collectApi.saveCollection(collect).then(res=>{
+            if(res.code===0) {
+              this.house.isCollection='1';
+              this.house.sumCollection++;
+            }else{
+              this.$message({
+                message: res.message,
+                type: 'warning'
+              })
+            }
+          })
+        }
+
+      }else {
+        this.$message({
+          message: '请登录',
+          type: 'warning'
+        });
+        this.$router.push('/login')
       }
-  },
-  data(){
-    return{
-      url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-      
-      srcList: [
-        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-        'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-      ]
+    },
+    getAreaById(val){
+      api.getAreaById({id:val}).then(res=>{
+        if(res.code===0) {
+          this.areaName = res.data.name;
+        }else{
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      });
+    },
+    getPurposes(val){
+      let purpose = '';
+      this.purposes.forEach(item=>{
+        if(item.value===val) purpose= item.label
+      });
+      return purpose;
+    },
+    getOrientation(val){
+      let orientation = '';
+      this.orientations.forEach(item=>{
+        if(item.value===val) orientation= item.label
+      });
+      return orientation;
+    },
+    init(){
+      this.houseId=this.$route.query.houseId;
+      this.getTableDate();
+
+    },
+    getTableDate(){
+      api.getHouseById({id:this.houseId,userId:this.userInfo.id}).then(res=>{
+        if(res.code===0) {
+          this.house=res.data.house;
+          this.image=res.data.image;
+          this.user =res.data.user ;
+          this.getAreaById(this.house.areaId);
+        }else{
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      })
     }
+  },
+  created() {
+    if (sessionStorage.userInfo) {
+      this.userInfo = JSON.parse(sessionStorage.userInfo);
+    }
+    this.init();
   }
+
 }
 </script>
 
@@ -175,7 +264,7 @@ export default {
         width: 700px;
         height: 400px;
         float: left;
-        
+
         img{
           width: 700px;
           height: 400px;
@@ -202,7 +291,7 @@ export default {
             font-size: 16px;
             color: #101d37;
           }
-          
+
         }
         .introduce{
           ul{
@@ -252,7 +341,7 @@ export default {
       .tab{
         font-weight: 700;
         font-size: 23px;
-        line-height: 74px;
+        line-height: 50px;
         margin-top: 20px;
       }
       .information{

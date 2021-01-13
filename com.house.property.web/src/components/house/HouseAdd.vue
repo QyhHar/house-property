@@ -61,17 +61,17 @@
               <div class="u-select u-select-build">
                 <input name="contact"  v-model="formData.measureArea" type="text" placeholder="您房子的面积"  style="width: 250px;">
               </div>
+              <div class="u-select u-select-build">
+                <input v-model="formData.floor"  placeholder="几楼"  type="text" >
+              </div>
+              <div class="u-select u-select-build">
+                <input v-model="formData.sumFloor"  placeholder="总共几楼"  type="text" >
+              </div>
             </dd>
           </dl>
           <dl>
             <dt>方位信息</dt>
             <dd>
-              <div class="u-select u-select-build">
-                <input v-model="formData.floor"  placeholder="几楼"  type="text" >
-              </div>
-              <div class="u-select u-select-build">
-                <input v-model="formData.buildingAge"  placeholder="楼龄"  type="text" >
-              </div>
               <div class="u-select u-select-build">
                 <el-select v-model="formData.orientation" placeholder="朝向">
                   <el-option
@@ -82,6 +82,10 @@
                   </el-option>
                 </el-select>
               </div>
+              <div class="u-select u-select-build">
+                <input v-model="formData.buildingAge"  placeholder="楼龄"  type="text" >
+              </div>
+
             </dd>
           </dl>
           <dl>
@@ -161,27 +165,29 @@
               <el-upload
                 action="#"
                 :http-request="uploadSectionFile"
-                :show-file-list="false"
                 multiple
+                show-file-list
+                :on-remove="handleRemove"
+                :file-list="uploadFile"
               >
                 <el-button size="mini" >点击上传</el-button>
               </el-upload>
             </dd>
           </dl>
-
         </div>
       </div>
-      <p class="tips">提示：您点击“{{type=='1'?'确认发布':'提交委托'}}”后，若您的房源通过平台初步审核，将会由平台上的经纪人和您取得联系，并对您的房源进行再次核实，核实无误后将与您建立服务关系。贝壳平台仅提供信息展示和网络技术服务。</p>
-      <div class="m-submit" @click="handleSubmit()">{{type==0?'确认发布':'提交委托'}}</div>
+      <p class="tips">提示：您点击“{{type==='1'?'确认发布':'提交委托'}}”后，若您的房源通过平台初步审核，将会由平台上的经纪人和您取得联系，并对您的房源进行再次核实，核实无误后将与您建立服务关系。贝壳平台仅提供信息展示和网络技术服务。</p>
+      <div class="m-submit" @click="handleSubmit()">{{type==='1'?'确认发布':'提交委托'}}</div>
     </div>
   </div>
 </template>
 
 <script>
-import Head from "../head/Head/Head";
-import api from "../../api/house.api"
-import userApi from "../../api/user.api"
-export default {
+  import Head from "../head/Head/Head";
+  import api from "../../api/house.api"
+  import userApi from "../../api/user.api"
+
+  export default {
   data() {
       return {
         rentalTypes: [{value: '1', label: '整租'}, {value: '2', label: '合租'}],
@@ -191,8 +197,6 @@ export default {
         purposes: [{value: '1', label: '普通住宅'}, {value: '2', label: '商业类'},
           {value: '3', label: '别墅'}, {value: '4', label: '四合院'},
           {value: '5', label: '车位'}, {value: '6', label: '其他'}],
-
-
         userInfo:{},
         options:[],
         address1:'',
@@ -200,7 +204,7 @@ export default {
         address3:'',
 
         activeName: 'first',
-        type:'0',
+        type:'1',
         formData:{
           areaId:'',//区域id
           residential:'',//小区
@@ -212,6 +216,7 @@ export default {
           office:'',//几厅
           orientation:'',//朝向：1-北；2-南；3-西；4-东
           floor:'',//几楼
+          sumFloor:'',//总共几楼
           buildingAge:'',//楼龄
           purpose:'',//用途：1-普通住宅；2-商业类；3-别墅；4四合院；5-车位；6-其他
           heating:'',//供暖：1-集中供暖；2-自供暖
@@ -223,6 +228,7 @@ export default {
           uuid:'',
           captchaCode:'',
           code:'',
+          file:[],
         },
         uploadFile:[],
       };
@@ -234,6 +240,14 @@ export default {
     Head,
   },
   methods:{
+    handleRemove(file){
+      let index = this.uploadFile.findIndex(item =>{
+        if(item.name===file.name){
+          return true
+        }
+      });
+      this.uploadFile.splice(index,1);
+    },
     uploadSectionFile(param) {
       let fileObj = param.file;
       const isLt2M = fileObj.size / 1024 / 1024 < 2;
@@ -241,20 +255,35 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
         return;
       }
-      let uploadFile='';
-      if (fileObj.type === "image/jpeg") {
-        uploadFile = new File([fileObj], new Date().getTime() + ".jpg", {
-          type: "image/jpeg",
+      if (fileObj.type === "image/jpeg"||fileObj.type === "image/png") {
+        this.getBase64(fileObj).then(res => {
+          let file  = {
+            base64:res,
+            name:fileObj.name
+          };
+          this.uploadFile.push(file);
         });
-      } else if (fileObj.type === "image/png") {
-        uploadFile = new File([fileObj], new Date().getTime() + ".png", {
-          type: "image/png",
-        });
-      } else {
+      }else {
         this.$message.error("只能上传jpg/png文件");
         return;
       }
-      if(uploadFile) this.uploadFile.push(uploadFile);
+
+    },
+    getBase64(file) {
+      return new Promise(function(resolve, reject) {
+        let reader = new FileReader();
+        let imgResult = "";
+        reader.readAsDataURL(file);
+        reader.onload = function() {
+          imgResult = reader.result;
+        };
+        reader.onerror = function(error) {
+          reject(error);
+        };
+        reader.onloadend = function() {
+          resolve(imgResult);
+        };
+      });
     },
     getCode() {
       userApi.getCode({width: 200, height: 50}).then(res => {
@@ -281,7 +310,6 @@ export default {
               +(this.address1.indexOf('单元')===-1?'单元':'')+this.address3+(this.address1.indexOf('号')===-1?'号':'');
       this.formData.userId=this.userInfo.id;
       this.formData.type=this.type;
-      debugger
       this.formData.areaId=this.formData.areaId.length===0?'0':this.formData.areaId[this.formData.areaId.length-1];
       this.formData.unitPrice = (this.formData.totalPrice/this.formData.measureArea).toFixed(2);
       if(this.formData.type==='2'&&!this.formData.totalPrice)this.formData.totalPrice='0';
@@ -292,19 +320,22 @@ export default {
           return ;
         }
       }
-      let param = new FormData(); // FormData 对象
       this.uploadFile.forEach(item=>{
-        param.append("file", item); // 文件对象
+        this.formData.file.push(item.base64);
       });
-      param.append("obj",JSON.stringify(this.formData)); // 其他参数
-      api.houseAdd(param).then(res => {
-        debugger
-          //console.log(res,'res111111');
-          // if(res.code===0){
-          //    
-          // }else{
-
-          // }
+      api.houseAdd(this.formData).then(res => {
+        if(res.code==0){
+          this.$message({
+            type: 'success',
+            message: '新增成功'
+          });
+          this.$router.push('/')
+        }else{
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+        }
       });
 
     }

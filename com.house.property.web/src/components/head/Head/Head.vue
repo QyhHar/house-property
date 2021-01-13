@@ -3,9 +3,9 @@
         <div class="inner">
           <ul>
             <li @click="$router.push('/house')">首页</li>
-            <li @click="$router.push('/houseBuy')">买房</li>
+            <li @click="goHouseBuy('1')">买房</li>
             <li @click="goHouseAdd('1')">卖房</li>
-            <li @click="$router.push('/houseRenting')">租房</li>
+            <li @click="goHouseBuy('2')">租房</li>
             <li @click="goHouseAdd('2')">出租</li>
           </ul>
           <div class="loginReg" >
@@ -47,7 +47,6 @@
           this.$router.push('/login')
         },
         goHouseAdd(val){
-          debugger
           if(this.userInfo.nickName){
             if(this.$route.path==='/houseAdd'){
               this.$emit("getType", val);
@@ -63,6 +62,15 @@
               type: 'warning'
             });
             this.$router.push('/login')
+          }
+        },goHouseBuy(val){
+          if(this.$route.path==='/houseBuy'){
+            this.$emit("getType", val);
+          }else {
+            this.$router.push({
+              path: "/houseBuy",
+              query: { type: val },
+            });
           }
         }
       }
@@ -97,6 +105,9 @@
       float: right;
       color: rgb(228, 228, 228);
       text-align: right;
+      .el-dropdown{
+        color: rgb(228, 228, 228);
+      }
       i{
         font-style: normal;
         cursor: pointer;

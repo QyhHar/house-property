@@ -73,6 +73,22 @@ public class AreaController {
             log.error("获取子区域出错",e);
         }
         return new Response(1,"获取子区域出错");
+    }
 
+    /**
+     * @Description: 获取区域
+     * @Author: hang.qi
+     * @Date: 2020/12/23 0023 下午 4:24
+     */
+    @GetMapping("getAreaById")
+    public Response getAreaById(Long id){
+        try {
+            log.info("获取区域；id"+id);
+            Area byId = areaService.getById(id);
+            return new Response(byId);
+        }catch (Exception e){
+            log.error("获取区域出错",e);
+        }
+        return new Response(1,"获取区域出错");
     }
 }

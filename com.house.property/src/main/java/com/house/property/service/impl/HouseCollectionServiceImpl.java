@@ -30,5 +30,14 @@ public class HouseCollectionServiceImpl extends BaseServiceImpl<HouseCollection>
         QueryWrapper<HouseCollection> query = new QueryWrapper<>();
         List<HouseCollection> houseCollections = selectListByQuery(houseCollection, query);
         return houseCollections.size()>0?houseCollections.get(0):null;
+
     }
+
+    @Override
+    public Integer getCountUserCollection(Long houseId) {
+        QueryWrapper<HouseCollection> query = new QueryWrapper<>();
+        query.lambda().eq(HouseCollection::getHouseId,houseId);
+        return houseCollectionMapper.selectCount(query);
+    }
+
 }

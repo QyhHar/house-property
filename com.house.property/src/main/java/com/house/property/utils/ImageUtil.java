@@ -1,5 +1,6 @@
 package com.house.property.utils;
 
+import com.sun.org.apache.bcel.internal.util.ClassPath;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -20,11 +21,13 @@ import java.util.Date;
 @Component
 public class ImageUtil {
 
-    private static String imagePath;
+    private static String linuxImagePath;
+
+    private static Boolean isWindows=false;
 
     @Value("${upload.image.imagePath}")
     public  void setPath(String imagePath) {
-        this.imagePath= imagePath;
+        this.linuxImagePath = imagePath;
     }
 
     /**
@@ -40,14 +43,26 @@ public class ImageUtil {
             String suffix = fileName.substring(file.getOriginalFilename().lastIndexOf("."));
             suffix = suffix.toLowerCase();
             if(suffix.equals(".jpg") || suffix.equals(".jpeg") || suffix.equals(".png") || suffix.equals(".gif")){
+                String imagePath = "";
+                String path = "";
                 SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
                 SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMddhhmmssSSS");
-                String path = imagePath+format.format(new Date())+"/";
+                String format2 = format.format(new Date());
+                if(isWindows()){
+                    imagePath = getRootPath();
+                    imagePath = imagePath+".web\\static\\images\\";
+                    path="images\\";
+                }else {
+                    imagePath = linuxImagePath+"/";
+                    path=linuxImagePath+"/";
+                }
+                path = path+format2+"/";
+                imagePath = imagePath+format2+"/";
                 String name = format1.format(new Date());
                 log.info("path:" + path);
                 log.info("name:" + name);
                 fileName = name+suffix;
-                File targetFile = new File(path, fileName);
+                File targetFile = new File(imagePath, fileName);
                 if(!targetFile.getParentFile().exists()){    //注意，判断父级路径是否存在
                     targetFile.getParentFile().mkdirs();
                 }
@@ -61,6 +76,25 @@ public class ImageUtil {
             log.error("新增出错",e);
         }
         return null;
+    }
+    public static boolean isWindows() {
+        if(isWindows){
+            return true;
+        }else if(System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") != -1) {
+            isWindows=true;
+            return true;
+        }
+        return false;
+    }
+    public static String getRootPath() {
+        try {
+            File file = new File("");
+            return file.getCanonicalPath();
+        }catch (Exception e){
+            log.error("错误",e);
+            return "";
+        }
+
     }
 
 }

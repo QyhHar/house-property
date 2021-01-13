@@ -11,4 +11,4 @@ spring:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 upload:
   image:
-    imagePath: F:\images\
+    imagePath: /data/images/

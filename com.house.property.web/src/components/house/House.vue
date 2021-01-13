@@ -9,10 +9,10 @@
                     </div>
                     <div class="fr">
                         <ul>
-                            <li @click="$router.push('/houseBuy')">买房</li>
+                            <li @click="goHouseBuy('1')">买房</li>
                             <li @click="goHouseAdd('1')" >卖房</li>
-                            <li @click="$router.push('/houseRenting')">租房</li>
-                            <li  @click="goHouseAdd('2')">出租</li>
+                            <li @click="goHouseBuy('2')">租房</li>
+                            <li @click="goHouseAdd('2')">出租</li>
                         </ul>
                         <div class="backstage" v-if="userInfo.type==1">后台管理</div>
 
@@ -127,6 +127,16 @@ export default {
           type: 'warning'
         });
         this.$router.push('/login')
+      }
+    },
+    goHouseBuy(val){
+      if(this.$route.path==='/houseBuy'){
+        this.$emit("getType", val);
+      }else {
+        this.$router.push({
+          path: "/houseBuy",
+          query: { type: val },
+        });
       }
     }
   }

@@ -22,6 +22,6 @@ public class Area implements Serializable {
     @TableId(type = IdType.AUTO)
     private String id;
     private String name;//区域名
-    private Long parentId; //父节点ID
+    private String parentId; //父节点ID
 
 }

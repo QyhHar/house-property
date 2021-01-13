@@ -10,6 +10,12 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    chainWebpack: (config) => {
+      config.resolve.alias
+        .set('@',resolve('./src'))
+        .set('@/components',resolve('./src/components'))
+        .set('@image',resolve('./static'))
+    },
     proxyTable: {
       '/api': {
         // target: 'http://118.178.179.111:80',

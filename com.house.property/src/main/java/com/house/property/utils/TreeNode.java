@@ -17,6 +17,6 @@ public class TreeNode implements Serializable {
     private static final long serialVersionUID = -8851339945708415816L;
     private String value;
     private String label;
-    private Long parentValue;
+    private String parentValue;
     private List<TreeNode> children;
 }
