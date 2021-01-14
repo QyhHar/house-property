@@ -39,8 +39,8 @@
                     <el-tabs v-model="activeName" @tab-click="handleClick">
                         <el-tab-pane label="找买房" name="first"></el-tab-pane>
                         <el-tab-pane label="找租房" name="second"></el-tab-pane>
-                        <el-input placeholder="请输入内容" v-model="input" class="input-with-select">
-                            <el-button slot="append" icon="el-icon-search"></el-button>
+                        <el-input placeholder="请输入内容" v-model="residential" class="input-with-select">
+                            <el-button slot="append" @click="select"  icon="el-icon-search"></el-button>
                         </el-input>
                     </el-tabs>
 
@@ -52,15 +52,16 @@
             <p>好房源那么多，我们为你精选</p>
             <div class="list1-inner">
                 <el-row>
-                    <el-col :span="8" v-for="(o, index) in 4" :key="o" :offset="index > 0 ? 1 : 0">
-                        <el-card :body-style="{ padding: '0px' }">
-                        <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+                    <el-col :span="8" v-for="(item, index) in qualityHouse.buy" :key="index">
+                        <el-card @click.native="goHouseEdit(item.id)" :body-style="{ padding: '0px',}">
+                        <img v-if="item.images.length" :src="item.images[0].imageUrl" class="image"  width="323" height="200">
+                        <img v-if="!item.images.length" src="../../assets/login/login.jpg"  class="image"  width="323" height="200">
                         <div style="padding: 14px;">
-                            <h2>未央区</h2>
-                            <h2>保利金香槟</h2>
+                            <h2>{{item.areaName}}</h2>
+                            <h2>{{item.residential}}</h2>
                             <div class="bottom clearfix">
-                                <time class="size">3室2厅.91平米</time>
-                                <div class="money">147.5万</div>
+                                <time class="size">{{item.room +`室`+item.office+`厅 `+item.measureArea+`m²`}}</time>
+                                <div class="money">{{item.totalPrice}}万</div>
                             </div>
                         </div>
                         </el-card>
@@ -73,15 +74,16 @@
             <p>高品质租房体验，从我们开始</p>
             <div class="list1-inner">
                 <el-row>
-                    <el-col :span="8" v-for="(o, index) in 4" :key="o" :offset="index > 0 ? 1 : 0">
-                        <el-card :body-style="{ padding: '0px' }">
-                        <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+                    <el-col :span="8" v-for="(item, index) in qualityHouse.rent" :key="index" >
+                        <el-card @click.native="goHouseEdit(item.id)" :body-style="{ padding: '0px' }">
+                          <img v-if="item.images.length" :src="item.images[0].imageUrl" class="image"  width="323" height="200">
+                          <img v-if="!item.images.length" src="../../assets/login/login.jpg"  class="image"  width="323" height="200">
                         <div style="padding: 14px;">
-                            <h2>未央区</h2>
-                            <h2>保利金香槟 2室1厅</h2>
+                            <h2>{{item.areaName}}</h2>
+                            <h2>{{item.residential+item.room +`室`+item.office+`厅 `}}</h2>
                             <div class="bottom clearfix">
-                                <time class="size" style="width:30%">整租</time>
-                                <div class="money" style="width:70%">2200元/月</div>
+                                <time class="size" style="width:30%">{{item.rentalType==='1'?'整租':'合租'}}</time>
+                                <div class="money" style="width:70%">{{item.rent&&item.rent.substring(0,item.rent.length-3)}}元/月</div>
                             </div>
                         </div>
                         </el-card>
@@ -93,22 +95,50 @@
 </template>
 
 <script>
+  import api from "../../api/house.api"
 export default {
     name:'house',
     data(){
         return{
           activeName: 'first',
-          input:'',
+          residential:'',
           userInfo:{},
+          qualityHouse:{
+            rent:[],
+            buy:[],
+          }
         }
     },
   created() {
     if (sessionStorage.userInfo) {
       this.userInfo = JSON.parse(sessionStorage.userInfo);
     }
+    api.getQualityHouse().then(res=>{
+      if(res.code===0) {
+        this.qualityHouse=res.data;
+      }else{
+        this.$message({
+          message: res.message,
+          type: 'warning'
+        })
+      }
+    })
   },
   methods:{
+    goHouseEdit(houseId){
+      this.$router.push({
+        path: "/houseEdit",
+        query: { houseId: houseId },
+      });
+    },
     handleClick(tab, event) {
+      this.activeName = tab.name;
+    },
+    select(){
+      this.$router.push({
+        path: "/houseBuy",
+        query: { residential: this.residential,type: this.activeName==='first'?'1':'2' },
+      });
     },
     handleCommand(command){
       if(command == "outLogin")
@@ -274,7 +304,7 @@ export default {
       }
     }
     .list1{
-      width: 1200px;
+      width: 1300px;
       margin: 80px auto 0;
       .name{
         font-size: 36px;
@@ -289,7 +319,7 @@ export default {
         line-height: 22px;
       }
       .list1-inner{
-        width: 1200px;
+        width: 1300px;
         overflow: hidden;
         margin-top: 26px;
         .time {
@@ -305,7 +335,6 @@ export default {
           float: right;
         }
         .image {
-          width: 100%;
           display: block;
         }
         .clearfix:before,
@@ -317,7 +346,7 @@ export default {
           clear: both
         }
         .el-col-8{
-          width: 21.5%;
+          width: 24%;
           cursor: pointer;
         }
         h2{

@@ -27,6 +27,9 @@ public class House implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
     private String areaId;//区域id
+    @TableField(exist=false)
+    private String areaName;//区域名字
+
     private String residential;//小区
     private String houseAddress;//房屋地址
     private String unitPrice;//单价

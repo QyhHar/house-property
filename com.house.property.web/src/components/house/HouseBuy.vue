@@ -136,10 +136,10 @@
       <ul class="content-list">
         <li class="content-one" v-for="(item, index) in page.records" :key="index" >
           <div class="content-img" v-if="item.images.length">
-          <img :src="item.images[0].imageUrl"  width="300">
+          <img @click="goHouseEdit(item.id)" :src="item.images[0].imageUrl"  width="300" height="200">
           </div>
           <div class="content-img" v-if="!item.images.length">
-            <img src="../../assets/login/login.jpg" width="300">
+            <img @click="goHouseEdit(item.id)" src="../../assets/login/login.jpg" width="300" height="200">
           </div>
           <el-button style="float: right" @click="doCollect(item.id,item.isCollection)"   size="mini">{{item.isCollection!=='1'?'关注':'已关注'}}</el-button>
           <div class="content-text">
@@ -393,6 +393,7 @@ export default {
       this.userInfo = JSON.parse(sessionStorage.userInfo);
     }
     this.type=this.$route.query.type;
+    this.formData.residential=this.$route.query.residential;
     this.init();
   }
 }

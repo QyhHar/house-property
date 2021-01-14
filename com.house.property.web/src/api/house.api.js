@@ -25,6 +25,11 @@ async function getHouseById(params) {
   return await http.get('/house/getById', params)
 }
 
+//获取品质房屋
+async function getQualityHouse(params) {
+  return await http.get('/house/getQualityHouse', params)
+}
+
 
 export default{
   getChildArea,
@@ -32,4 +37,5 @@ export default{
   getHouseByQuery,
   getHouseById,
   getAreaById,
+  getQualityHouse,
 }

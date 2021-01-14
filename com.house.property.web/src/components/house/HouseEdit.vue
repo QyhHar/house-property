@@ -3,7 +3,7 @@
     <Head></Head>
     <div class="title">
       <div class="title-inner">
-        <h1>三桥地铁口，华润央企大楼盘高品质，刚需楼盘欢饮咨询</h1>
+        <h1>{{house.areaName+` `+house.residential}} 高品质，欢迎咨询</h1>
         <p>地铁公交站、教育、户型好、视野开阔、楼间距大</p>
       </div>
     </div>
@@ -45,7 +45,7 @@
                 小区名称<i>{{house.residential}}</i>
               </li>
               <li>
-                所在区域<i>{{areaName}}</i>
+                所在区域<i>{{house.areaName}}</i>
               </li>
               <li>
                 信息编号<i>{{house.id}}</i>
@@ -208,7 +208,7 @@ export default {
           this.house=res.data.house;
           this.image=res.data.image;
           this.user =res.data.user ;
-          this.getAreaById(this.house.areaId);
+          //this.getAreaById(this.house.areaId);
         }else{
           this.$message({
             message: res.message,

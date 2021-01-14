@@ -11,6 +11,7 @@ import com.house.property.service.base.BaseServiceImpl;
 import com.house.property.service.impl.HouseServiceImpl;
 import com.house.property.utils.ImageUtil;
 import com.house.property.utils.MD5Util;
+import com.house.property.utils.RedisCache;
 import com.house.property.utils.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Book;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -83,7 +85,8 @@ public class HouseController {
                     house1.setIsCollection("0");
                 }
                 house1.setSumCollection(houseCollectionService.getCountUserCollection(house1.getId()));
-                house1.setImages(imageService.getImageByHouseId(house1.getId()));
+                List<Image> imageByHouseId = imageService.getImageByHouseId(house1.getId());
+                if(imageByHouseId.size()>0)house1.setImages(imageByHouseId.subList(0,1));
             }
             return new Response(houseIPage);
         }catch (Exception e){
@@ -114,6 +117,69 @@ public class HouseController {
         result.put("residential",new ArrayList<String>(Collections.singleton(jsonObject.getString("residential"))));
         return result;
     }
+
+    /**
+     * @Description: 获取品质房屋
+     * @Author: hang.qi
+     * @Date: 2021/1/14 0014 上午 10:59
+     */
+    @GetMapping("getQualityHouse")
+    public Response getQualityHouse(){
+        try {
+            log.info("获取品质房屋");
+            IPage<House> page = new Page<>(0,10);
+            QueryWrapper<House> queryWrapper = new QueryWrapper<>();
+            queryWrapper.orderByDesc(BaseServiceImpl.humpToLine("addTime"));
+            queryWrapper.lambda().eq(House::getType,"1");
+            IPage<House> houseIPage = houseService.selectPageByCondition(page,  queryWrapper);
+            Set<House> set = new TreeSet<>(new Comparator<House>() {
+                @Override
+                public int compare(House o1, House o2) {
+                    if(o1.getSumCollection().equals(o2.getSumCollection())) return 1;
+                    return o2.getSumCollection()-o1.getSumCollection();
+                }
+            });
+            for (House house: houseIPage.getRecords()) {
+                house.setSumCollection(houseCollectionService.getCountUserCollection(house.getId()));
+                set.add(house);
+            }
+
+            QueryWrapper<House> queryWrapper2 = new QueryWrapper<>();
+            queryWrapper2.orderByDesc(BaseServiceImpl.humpToLine("addTime"));
+            queryWrapper2.lambda().eq(House::getType,"2");
+            IPage<House> houseIPage2 = houseService.selectPageByCondition(page,  queryWrapper2);
+            Set<House> set2 = new TreeSet<>(new Comparator<House>() {
+                @Override
+                public int compare(House o1, House o2) {
+                    if(o1.getSumCollection().equals(o2.getSumCollection())) return 1;
+                    return o2.getSumCollection()-o1.getSumCollection();
+                }
+            });
+            for (House house: houseIPage2.getRecords()) {
+                house.setSumCollection(houseCollectionService.getCountUserCollection(house.getId()));
+                set2.add(house);
+            }
+            List<House> list = new ArrayList<>(set).subList(0, Math.min(set.size(), 4));
+            List<House> list2 = new ArrayList<>(set2).subList(0, Math.min(set2.size(), 4));
+            for (House house:list) {
+                List<Image> imageByHouseId = imageService.getImageByHouseId(house.getId());
+                house.setAreaName(areaService.getById(Long.parseLong(house.getAreaId())).getName());
+                if(imageByHouseId.size()>0)house.setImages(imageByHouseId.subList(0,1));
+            }for (House house:list2) {
+                List<Image> imageByHouseId = imageService.getImageByHouseId(house.getId());
+                house.setAreaName(areaService.getById(Long.parseLong(house.getAreaId())).getName());
+                if(imageByHouseId.size()>0)house.setImages(imageByHouseId.subList(0,1));
+            }
+            Map<String,List<House>> result = new HashMap<>();
+            result.put("buy",list);
+            result.put("rent",list2);
+            return new Response(result);
+        }catch (Exception e){
+            log.error("获取用户绑定的所有房屋出错",e);
+        }
+        return new Response(1,"获取用户绑定的所有房屋出错");
+    }
+
 
     /**
      * @Description: 获取用户绑定的所有房屋
@@ -176,6 +242,7 @@ public class HouseController {
             }else {
                 byUserId.setIsCollection("0");
             }
+            byUserId.setAreaName(areaService.getById(Long.parseLong(byUserId.getAreaId())).getName());
             byUserId.setSumCollection(houseCollectionService.getCountUserCollection(id));
             List<Image> imageByHouseId = imageService.getImageByHouseId(id);
             User byId = userService.getById(byUserId.getUserId());
