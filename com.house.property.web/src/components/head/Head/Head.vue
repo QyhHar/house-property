@@ -12,7 +12,7 @@
 
             <div v-if="userInfo.nickName">
               <el-dropdown @command="handleCommand">
-                <span>{{ userInfo.nickName? `欢迎您，${userInfo.nickName}` : 'admin' }}</span>
+                <span> <svg-icon icon-class="head-icon"></svg-icon>{{ userInfo.nickName? `欢迎您，${userInfo.nickName}` : 'admin' }}</span>
                 <el-dropdown-menu slot="dropdown" style="margin-top: 0px">
                   <el-dropdown-item   command="outLogin" >退出登录</el-dropdown-item>
                 </el-dropdown-menu>
