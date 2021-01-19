@@ -140,7 +140,7 @@
             <p>高品质租房体验，从我们开始</p>
             <div class="list1-inner">
                 <el-row>
-                    <el-col :span="8" v-for="(item, index) in qualityHouse.rent" :key="index" >
+                    <el-col :span="8" v-for="(item, index) in qualityHouse.rent" :key="index" :class="index===3?'':'last'">
                         <el-card @click.native="goHouseEdit(item.id)" :body-style="{ padding: '0px' }">
                           <img v-if="item.images.length" :src="item.images[0].imageUrl" class="image"  width="323" height="200">
                           <img v-if="!item.images.length" src="../../assets/login/login.jpg"  class="image"  width="323" height="200">
@@ -431,7 +431,7 @@ export default {
       }
     }
     .list1{
-      width: 1300px;
+      width: 1200px;
       margin: 80px auto 0;
       .name{
         font-size: 36px;
@@ -446,9 +446,15 @@ export default {
         line-height: 22px;
       }
       .list1-inner{
-        width: 1300px;
+        width: 100%;
         overflow: hidden;
         margin-top: 26px;
+        .el-col-8{
+          margin-right: 26px;
+        }
+        .el-col-8:last-child{
+          margin-right: 0;
+        }
         .time {
           font-size: 13px;
           color: #999;
@@ -473,7 +479,7 @@ export default {
           clear: both
         }
         .el-col-8{
-          width: 24%;
+          width: 23%;
           cursor: pointer;
         }
         h2{
