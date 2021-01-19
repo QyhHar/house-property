@@ -9,7 +9,7 @@ import HouseBuy from '@/components/house/HouseBuy'
 import HouseRenting from '@/components/house/HouseRenting'
 import Manage from '@/components/manage/manage'
 import UserList from '@/components/manage/user/UserList'
-import HouseList from '@/components/manage/house/houseList'
+import HouseList from '@/components/manage/house/HouseList'
 import HouseUser from '@/components/house/HouseUser'
 
 Vue.use(Router)
