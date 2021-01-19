@@ -4,11 +4,12 @@
     <div class="title">
       <div class="title-inner">
         <h1>{{house.areaName+` `+house.residential}} 高品质，欢迎咨询</h1>
-        <p>地铁公交站、教育、户型好、视野开阔、楼间距大</p>
+        <p>地铁公交站、教育、户型好、视野开阔、楼间距大{{image.lenght}}</p>
       </div>
     </div>
     <div class="content">
       <div class="content-top">
+
         <div class="fl" v-if="image.length">
           <img :src="image[0].imageUrl" width="700" >
         </div>
@@ -118,7 +119,25 @@ export default {
       areaName:'',
       houseId:'',
       userInfo:{},
-      house:{},
+      house:{areaId:'',//区域id
+        residential:'',//小区
+        houseAddress:'',//房屋地址
+        unitPrice:'',//单价
+        measureArea:'',//面积
+        totalPrice:'',//总价
+        room:'',//几室
+        office:'',//几厅
+        orientation:'',//朝向：1-北；2-南；3-西；4-东
+        floor:'',//几楼
+        sumFloor:'',//总共几楼
+        buildingAge:'',//楼龄
+        purpose:'',//用途：1-普通住宅；2-商业类；3-别墅；4四合院；5-车位；6-其他
+        heating:'',//供暖：1-集中供暖；2-自供暖
+        type:'',//类型：1:-买卖；2-出租
+        rent:'',//租金(每月)
+        phoneNumber:'',//手机号码
+        userId:'',//用户Id
+      },
       image:{},
       user:{},
     }
@@ -206,7 +225,7 @@ export default {
       api.getHouseById({id:this.houseId,userId:this.userInfo.id}).then(res=>{
         if(res.code===0) {
           this.house=res.data.house;
-          this.image=res.data.image;
+          this.image=res.data.house.images;
           this.user =res.data.user ;
           //this.getAreaById(this.house.areaId);
         }else{

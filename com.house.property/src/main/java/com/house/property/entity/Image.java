@@ -21,6 +21,7 @@ public class Image implements Serializable {
     private static final long serialVersionUID = -5431848296646477252L;
     @TableId(type = IdType.AUTO)
     private Long id;
+    private String name;
     private String imageUrl;//图片地址
     private Long houseId;//房屋ID
 }

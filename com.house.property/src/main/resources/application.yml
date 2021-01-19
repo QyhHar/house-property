@@ -4,7 +4,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     password: 123456
-    url: jdbc:mysql://10.221.122.200:3306/house_property?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://127.0.0.1:3306/house_property?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
 #mybatis-plus:
 #  configuration:

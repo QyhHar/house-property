@@ -47,6 +47,8 @@ public class House implements Serializable {
     private String rentalType;//出租方式：1:-整租；2-合租
     private String rent;//租金(每月)
     private String phoneNumber;//手机号码
+
+
     private Long userId;//用户Id
     private Date addTime;
 

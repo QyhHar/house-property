@@ -3,10 +3,7 @@ package com.house.property.controller;
 import com.house.property.entity.Area;
 import com.house.property.entity.User;
 import com.house.property.service.AreaService;
-import com.house.property.utils.MD5Util;
-import com.house.property.utils.RedisCache;
-import com.house.property.utils.Response;
-import com.house.property.utils.TreeNode;
+import com.house.property.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AreaController {
 
 
-    public static String redisCode = "areaTree";
     @Autowired
     private AreaService areaService;
 
@@ -40,7 +36,7 @@ public class AreaController {
     public List<TreeNode> postConstruct(){
         log.info("初始化区域树");
         List<TreeNode> list = areaService.getTreeArea();
-        RedisCache.putValue(redisCode,list,-1);
+        RedisCache.putValue(EnumUtil.areaTreeCode,list,-1);
         return list;
     }
 
@@ -53,7 +49,7 @@ public class AreaController {
     @GetMapping("getTreeArea")
     public Response getTreeArea(){
         log.info("获取区域树");
-        List<TreeNode> list = (List<TreeNode>)RedisCache.getValue(redisCode);
+        List<TreeNode> list = (List<TreeNode>)RedisCache.getValue(EnumUtil.areaTreeCode);
         if(list==null) list = postConstruct();
         return new Response(list);
     }

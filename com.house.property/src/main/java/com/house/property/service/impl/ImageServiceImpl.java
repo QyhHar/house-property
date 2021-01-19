@@ -9,6 +9,8 @@ import com.house.property.mapper.ImageMapper;
 import com.house.property.service.HouseService;
 import com.house.property.service.ImageService;
 import com.house.property.service.base.BaseServiceImpl;
+import com.house.property.utils.EnumUtil;
+import com.house.property.utils.RedisCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,8 +32,12 @@ public class ImageServiceImpl extends BaseServiceImpl<Image> implements ImageSer
 
     @Override
     public List<Image> getImageByHouseId(Long HouseId) {
+        Object value = RedisCache.getValue(EnumUtil.imageDateCode + HouseId);
+        if(value!=null) return (List<Image>)value;
         QueryWrapper<Image> query = new QueryWrapper<>();
         query.lambda().eq(Image::getHouseId,HouseId);
-        return imageMapper.selectList(query);
+        List<Image> images = imageMapper.selectList(query);
+        RedisCache.putValue(EnumUtil.imageDateCode+HouseId,images,10*60);
+        return images;
     }
 }

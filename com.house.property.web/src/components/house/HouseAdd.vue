@@ -3,14 +3,14 @@
     <Head @getType="getType"></Head>
     <div class="head">
       <div class="title">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tabs v-if="!formData.id" v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="我要卖房"  name="first"></el-tab-pane>
           <el-tab-pane label="委托出租" name="second"></el-tab-pane>
         </el-tabs>
       </div>
     </div>
     <div class="m-jumbotron">
-      <div class="tit">发布{{type=='1'?`出售`:`出租`}}房源</div>
+      <div class="tit">{{(formData.id?`修改已`:'')+(type==='1'?`发布出售`:`发布出租`)}}房源</div>
       <div class="sub-tit">快速全城推广 · 数万优质用户 · 专业团队服务</div>
     </div>
     <div class="m-form">
@@ -34,13 +34,19 @@
                 <dt>房屋地址</dt>
                 <dd>
                     <div class="u-select u-select-build">
-                        <input v-model="address1"  placeholder="楼栋号"  type="text" >
+                        <el-input v-model="address1"    type="text" >
+                          <span slot="suffix">栋</span>
+                        </el-input>
                     </div>
                     <div class="u-select u-select-build">
-                        <input v-model="address2" placeholder="单元号" type="text">
+                      <el-input v-model="address2"  type="text">
+                      <span slot="suffix">单元</span>
+                      </el-input>
                     </div>
                     <div class="u-select u-select-build">
-                        <input v-model="address3" placeholder="门牌号" type="text">
+                      <el-input v-model="address3"  type="text">
+                      <span slot="suffix">号</span>
+                      </el-input>
                     </div>
                 </dd>
             </dl>
@@ -48,10 +54,14 @@
             <dt>厅室</dt>
             <dd>
               <div class="u-select u-select-build">
-                <input v-model="formData.room"  placeholder="几室"  type="text" >
+              <el-input v-model="formData.room"  type="text" >
+                <span slot="suffix">室</span>
+              </el-input>
               </div>
               <div class="u-select u-select-build">
-                <input v-model="formData.office"  placeholder="几厅"  type="text" >
+                <el-input v-model="formData.office"   type="text" >
+                  <span slot="suffix">厅</span>
+                </el-input>
               </div>
             </dd>
           </dl>
@@ -59,13 +69,19 @@
             <dt>面积</dt>
             <dd>
               <div class="u-select u-select-build">
-                <input name="contact"  v-model="formData.measureArea" type="text" placeholder="您房子的面积"  style="width: 250px;">
+                <el-input   v-model="formData.measureArea" type="text" >
+                <span slot="suffix">m²</span>
+                </el-input>
               </div>
               <div class="u-select u-select-build">
-                <input v-model="formData.floor"  placeholder="几楼"  type="text" >
+                <el-input v-model="formData.floor"  type="text" >
+                <span slot="suffix">楼</span>
+                </el-input>
               </div>
               <div class="u-select u-select-build">
-                <input v-model="formData.sumFloor"  placeholder="总共几楼"  type="text" >
+                <el-input v-model="formData.sumFloor"    type="text" >
+                <span slot="suffix">总楼</span>
+                </el-input>
               </div>
             </dd>
           </dl>
@@ -83,7 +99,9 @@
                 </el-select>
               </div>
               <div class="u-select u-select-build">
-                <input v-model="formData.buildingAge"  placeholder="楼龄"  type="text" >
+                <el-input v-model="formData.buildingAge"   type="text" >
+                <span slot="suffix">楼龄</span>
+                </el-input>
               </div>
 
             </dd>
@@ -156,7 +174,7 @@
                 <dt>图形验证码</dt>
                 <dd>
                     <input v-model="formData.code" name="verify_code" type="text" placeholder="请输入图形验证码中的结果"  style="width: 170px;">
-                    <img   @click="getCode":src="formData.captchaCode" alt="验证码图片" style="width: 100px;height: 50px;float: right;">
+                    <img   @click="getCode":src="captchaCode" alt="验证码图片" style="width: 100px;height: 50px;float: right;">
                 </dd>
             </dl>
           <dl>
@@ -166,10 +184,13 @@
                 action="#"
                 :http-request="uploadSectionFile"
                 multiple
+                limit="5"
                 show-file-list
                 :on-remove="handleRemove"
-                :file-list="uploadFile"
+                :file-list="formData.images"
+                list-type="picture"
               >
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件最多5张，且不超过1M</div>
                 <el-button size="mini" >点击上传</el-button>
               </el-upload>
             </dd>
@@ -226,10 +247,11 @@
           userId:'',//用户Id
           rentalType:'1',//出租类型 1:-整租；2-合租
           uuid:'',
-          captchaCode:'',
           code:'',
-          file:[],
+          images:[],
         },
+        uuid:'',
+        captchaCode:'',
         uploadFile:[],
       };
     },
@@ -241,27 +263,28 @@
   },
   methods:{
     handleRemove(file){
-      let index = this.uploadFile.findIndex(item =>{
+      let index = this.formData.images.findIndex(item =>{
         if(item.name===file.name){
           return true
         }
       });
-      this.uploadFile.splice(index,1);
+      this.formData.images.splice(index,1);
     },
     uploadSectionFile(param) {
       let fileObj = param.file;
-      const isLt2M = fileObj.size / 1024 / 1024 < 2;
+      const isLt2M = fileObj.size / 1024 / 1024 < 1;
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$message.error("上传图片大小不能超过 1MB!");
         return;
       }
       if (fileObj.type === "image/jpeg"||fileObj.type === "image/png") {
         this.getBase64(fileObj).then(res => {
           let file  = {
-            base64:res,
+            imageUrl:res,
+            url:res,
             name:fileObj.name
           };
-          this.uploadFile.push(file);
+          this.formData.images.push(file);
         });
       }else {
         this.$message.error("只能上传jpg/png文件");
@@ -287,12 +310,14 @@
     },
     getCode() {
       userApi.getCode({width: 200, height: 50}).then(res => {
-        this.formData.captchaCode = res.data.captchaCode;
-        this.formData.uuid = res.data.uuid;
+        this.captchaCode = res.data.captchaCode;
+        this.uuid = res.data.uuid;
       });
     },
     getType(val){
       this.type=val;
+      if(this.type=='1')this.activeName='first';
+      if(this.type=='2')this.activeName='second';
     },
     handleClick(tab, event) {
       if(tab.name==='first') {
@@ -305,24 +330,41 @@
     handleSubmit(){
       this.initData();
     },
+    getAddress(){
+      if(this.formData.houseAddress){
+        this.address1=this.formData.houseAddress.substring(0,this.formData.houseAddress.indexOf('栋'));
+        this.address2=this.formData.houseAddress.substring(this.formData.houseAddress.indexOf('栋')+1,this.formData.houseAddress.indexOf('单元'));
+        this.address3=this.formData.houseAddress.substring(this.formData.houseAddress.indexOf('元')+1,this.formData.houseAddress.indexOf('号'));
+        this.formData.houseAddress='';
+      }else {
+        this.formData.houseAddress=this.address1+(this.address1.indexOf('栋')===-1?'栋':'')+this.address2
+          +(this.address1.indexOf('单元')===-1?'单元':'')+this.address3+(this.address1.indexOf('号')===-1?'号':'');
+      }
+    },
     initData(){
-      this.formData.houseAddress=this.address1+(this.address1.indexOf('栋')===-1?'栋':'')+this.address2
-              +(this.address1.indexOf('单元')===-1?'单元':'')+this.address3+(this.address1.indexOf('号')===-1?'号':'');
+      this.getAddress();
       this.formData.userId=this.userInfo.id;
       this.formData.type=this.type;
       this.formData.areaId=this.formData.areaId.length===0?'0':this.formData.areaId[this.formData.areaId.length-1];
       this.formData.unitPrice = (this.formData.totalPrice/this.formData.measureArea).toFixed(2);
       if(this.formData.type==='2'&&!this.formData.totalPrice)this.formData.totalPrice='0';
       if(this.formData.type==='1'&&!this.formData.rent)this.formData.rent='0';
+      if(this.uuid)this.formData.uuid=this.uuid;
       for(let key in this.formData) {
+        if(key==='sumCollection'||key==='images'||key==='isCollection') continue;
         if (!this.formData[key]){
-          this.$message.error("有必填字段需要填写");
+          this.$message.error("有必填字段需要填写"+key);
           return ;
         }
       }
-      this.uploadFile.forEach(item=>{
-        this.formData.file.push(item.base64);
-      });
+      if(this.formData.id){
+        this.updateHouse();
+      }else{
+        this.saveHouse();
+      }
+    },
+
+    saveHouse(){
       api.houseAdd(this.formData).then(res => {
         if(res.code==0){
           this.$message({
@@ -337,8 +379,46 @@
           })
         }
       });
-
-    }
+    },
+    updateHouse(){
+      api.houseUpdate(this.formData).then(res => {
+        if(res.code==0){
+          this.$message({
+            type: 'success',
+            message: '更新成功'
+          });
+          this.$router.push('/')
+        }else{
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      });
+    },
+    init(houseId){
+      if(houseId){
+        api.getHouseById({id:houseId}).then(res=>{
+          if(res.code===0) {
+            this.formData=res.data.house;
+            this.uploadFile=res.data.house.images;
+            this.getCode();
+            this.getAddress();
+            this.formData.images.forEach(item=>{
+              if(item.imageUrl) item.url=item.imageUrl;
+            });
+          }else{
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            })
+          }
+        })
+      }
+      else {
+        this.getCode();
+      }
+    },
   },
   created(){
     if (sessionStorage.userInfo) {
@@ -348,8 +428,10 @@
       this.options=res.data;
     });
     this.type=this.$route.query.type;
+    if(this.type=='1')this.activeName='first';
     if(this.type=='2')this.activeName='second';
-    this.getCode();
+    this.init(this.$route.query.houseId);
+
   }
 }
 </script>

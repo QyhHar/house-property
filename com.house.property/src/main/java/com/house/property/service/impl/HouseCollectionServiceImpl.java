@@ -34,7 +34,7 @@ public class HouseCollectionServiceImpl extends BaseServiceImpl<HouseCollection>
     }
 
     @Override
-    public Integer getCountUserCollection(Long houseId) {
+    public int getCountUserCollection(Long houseId) {
         QueryWrapper<HouseCollection> query = new QueryWrapper<>();
         query.lambda().eq(HouseCollection::getHouseId,houseId);
         return houseCollectionMapper.selectCount(query);

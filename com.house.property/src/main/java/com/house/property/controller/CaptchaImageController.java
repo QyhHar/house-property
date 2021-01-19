@@ -28,9 +28,6 @@ import java.util.concurrent.locks.ReentrantLock;
 public class CaptchaImageController {
 
 
-    private String redisCode = "captcha";
-
-
     /**
      * @Description: 获取图片验证码
      * @Author: hang.qi
@@ -47,7 +44,7 @@ public class CaptchaImageController {
 
             String code = shearCaptcha.getCode();
             String uuid = UUIDUtil.createSessionUuid();
-            RedisCache.putValue(redisCode+uuid,code,3*60);
+            RedisCache.putValue(EnumUtil.captchaCode+uuid,code,3*60);
             Map<String,String> result = new HashMap<>();
             result.put("uuid",uuid);
             result.put("captchaCode","data:img/jpg;base64,"+shearCaptcha.getImageBase64());
@@ -65,9 +62,13 @@ public class CaptchaImageController {
      */
     public Boolean checkCode(String uuid,String code){
         log.info("校验验证码");
-        if(RedisCache.getValue(redisCode + uuid)==null) return false;
-        String value = (String)RedisCache.getValue(redisCode + uuid);
-        return StringUtils.equals(value,code);
+        if(RedisCache.getValue(EnumUtil.captchaCode + uuid)==null) return false;
+        String value = (String)RedisCache.getValue(EnumUtil.captchaCode + uuid);
+        if(StringUtils.equals(value,code)){
+            RedisCache.removeValue(EnumUtil.captchaCode + uuid);
+            return true;
+        }
+        return false;
     }
 
 }

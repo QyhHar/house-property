@@ -7,6 +7,10 @@ import HouseEdit from '@/components/house/HouseEdit'
 import HouseAdd from '@/components/house/HouseAdd'
 import HouseBuy from '@/components/house/HouseBuy'
 import HouseRenting from '@/components/house/HouseRenting'
+import Manage from '@/components/manage/manage'
+import UserList from '@/components/manage/user/UserList'
+import HouseList from '@/components/manage/house/houseList'
+import HouseUser from '@/components/house/HouseUser'
 
 Vue.use(Router)
 
@@ -51,7 +55,30 @@ export default new Router({
       path: '/houseRenting',
       name: 'houseRenting',
       component: HouseRenting
-    }
+    },
+    {
+      path: '/manage',
+      name: 'manage',
+      redirect: '/manage/userList',
+      component: Manage,
+      children:[
+        {
+          path: '/manage/userList',
+          name: 'userList',
+          component: UserList,
+        },
+        {
+          path: '/manage/houseList',
+          name: 'houseList',
+          component: HouseList,
+        }
+      ]
+    },
+    {
+      path: '/houseUser',
+      name: 'houseUser',
+      component: HouseUser
+    },
 
   ]
 })

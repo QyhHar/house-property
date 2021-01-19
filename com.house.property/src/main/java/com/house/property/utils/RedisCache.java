@@ -22,6 +22,8 @@ public class RedisCache {
     //刷新缓存的频率   秒
     private static int MONITOR_DURATION = 10;
     // 启动监控线程
+
+
     static {
         new Thread(new TimeoutTimerThread()).start();
     }
@@ -96,6 +98,19 @@ public class RedisCache {
     public static Object getValue(String key) {
         if(cache.get(key)==null) return null;
         return cache.get(key).getValue();
+    }
+
+    /**
+     * @Description: 移除缓存
+     * @Author: hang.qi
+     * @Date: 2021/1/15 0015 下午 10:23
+     */
+    public static Boolean removeValue(String key) {
+        if(cache.get(key)!=null) {
+            cache.remove(key);
+            return true;
+        }
+        return false;
     }
 
     /**

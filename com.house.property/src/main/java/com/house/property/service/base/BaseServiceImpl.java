@@ -3,6 +3,7 @@ package com.house.property.service.base;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.house.property.service.base.BaseService;
@@ -36,6 +37,16 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     @Override
     public void delete(Long id) {
         baseDao.deleteById(id);
+    }
+
+    @Override
+    public void delete(List<Long> ids) {
+        baseDao.deleteBatchIds(ids);
+    }
+
+    @Override
+    public void delete(UpdateWrapper<T> selectWrapper) {
+        baseDao.delete(selectWrapper);
     }
 
     @Override

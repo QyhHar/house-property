@@ -135,10 +135,10 @@
       <div class="sum">{{`共找到 `+((page.total==='')?'0':page.total)+` 套房`}}</div>
       <ul class="content-list">
         <li class="content-one" v-for="(item, index) in page.records" :key="index" >
-          <div class="content-img" v-if="item.images.length">
+          <div class="content-img" v-if="item.images">
           <img @click="goHouseEdit(item.id)" :src="item.images[0].imageUrl"  width="300" height="200">
           </div>
-          <div class="content-img" v-if="!item.images.length">
+          <div class="content-img" v-if="!item.images">
             <img @click="goHouseEdit(item.id)" src="../../assets/login/login.jpg" width="300" height="200">
           </div>
           <el-button style="float: right" @click="doCollect(item.id,item.isCollection)"   size="mini">{{item.isCollection!=='1'?'关注':'已关注'}}</el-button>
@@ -335,6 +335,9 @@ export default {
       this.select();
     },
     select(){
+      this.page = {
+        total:0,
+        records:'',};
       if(this.minPrice!==''&&this.maxPrice){
         this.formData.totalPrice.push(this.minPrice+'-'+this.maxPrice);
       }

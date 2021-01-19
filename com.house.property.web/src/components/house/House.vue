@@ -14,7 +14,7 @@
                             <li @click="goHouseBuy('2')">租房</li>
                             <li @click="goHouseAdd('2')">出租</li>
                         </ul>
-                        <div class="backstage" v-if="userInfo.type==1">后台管理</div>
+                        <div class="backstage" @click="$router.push('/manage')" v-if="userInfo.type==1">后台管理</div>
 
                         <div class="loginReg" >
 
@@ -22,6 +22,8 @@
                             <el-dropdown @command="handleCommand">
                               <span> <svg-icon icon-class="head-icon"></svg-icon>{{ userInfo.nickName? `欢迎您，${userInfo.nickName}` : 'admin' }}</span>
                               <el-dropdown-menu slot="dropdown" style="margin-top: -6px">
+                                <el-dropdown-item   command="changPassword" >修改密码</el-dropdown-item>
+                                <el-dropdown-item   command="houseUser" >个人中心</el-dropdown-item>
                                 <el-dropdown-item   command="outLogin" >退出登录</el-dropdown-item>
                               </el-dropdown-menu>
                             </el-dropdown>
@@ -32,6 +34,70 @@
                         </div>
                     </div>
                 </div>
+              <el-dialog
+                title="提示"
+                :visible.sync="dialogVisible"
+                width="30%"
+              >
+
+                <el-form  :model="userInfo"  status-icon :rules="rules" ref="user"  class="demo-ruleForm">
+                  <el-row>
+                    <el-col :span="18">
+                      <el-form-item label="用户姓名" prop="nickName" label-width="100px">
+                        <el-input
+                          size="small"
+                          v-model="userInfo.nickName"
+                          auto-complete="off"
+                        ></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="18">
+                      <el-form-item label="登录名" prop="userName" label-width="100px">
+
+                        <el-input
+                          size="small"
+                          v-model="userInfo.userName"
+                          disabled="disabled"
+                        ></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="18">
+                      <el-form-item label="旧密码" prop="oldPassword" label-width="100px">
+                        <el-input
+                          size="small"
+                          type="password"
+                          v-model="userInfo.oldPassword"
+                          show-password
+                        >
+                        </el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="18">
+                      <el-form-item label="新密码" prop="newPassword" label-width="100px">
+                        <el-input
+                          size="small"
+                          type="password"
+                          v-model="userInfo.newPassword"
+                          show-password
+                        >
+                        </el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                  <el-button size="mini" @click="close">取 消</el-button>
+                  <el-button size="mini" type="primary" @click="changPassword">确 定</el-button>
+                </div>
+
+              </el-dialog>
                 <!-- banner大标题及搜索框 -->
                 <div class="wrap-bot">
                     <p>要找真房源 信息丰富全</p>
@@ -96,13 +162,40 @@
 
 <script>
   import api from "../../api/house.api"
+  import userApi from "../../api/user.api"
 export default {
     name:'house',
     data(){
+      let validateNickName = (rule, value, callback) => {
+        if (!value ) {
+          callback(new Error('请输入用户名'));
+        } else {
+          callback();
+        }
+      };
+      let validatePass = (rule, value, callback) => {
+        if (!value ) {
+          callback(new Error('请输入密码'));
+        } else if(!/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,30}$/.test(value)){
+          callback(new Error('密码6到30位必须含有英文字母、数字、特殊字符'));
+        }else {
+          callback();
+        }
+      };
         return{
+          dialogVisible: false,
           activeName: 'first',
           residential:'',
           userInfo:{},
+          rules: {
+            nickName: [
+              { validator: validateNickName, trigger: 'blur' }
+            ],oldPassword: [
+              { validator: validatePass, trigger: 'blur' }
+            ],newPassword: [
+              { validator: validatePass, trigger: 'blur' }
+            ],
+          },
           qualityHouse:{
             rent:[],
             buy:[],
@@ -125,6 +218,35 @@ export default {
     })
   },
   methods:{
+    changPassword(){
+      userApi.updatePassword(this.userInfo).then(res=>{
+        if(res.code===0) {
+          let userInfo = res.data;
+          sessionStorage.userInfo = JSON.stringify({
+            nickName: userInfo.nickName,
+            id: userInfo.id,
+            userName: userInfo.userName,
+            password: userInfo.password,
+            type: userInfo.type,
+          });
+          this.userInfo={};
+          this.userInfo=userInfo;
+          this.$message({
+            message: '修改密码成功',
+            type: 'success'
+          });
+          this.dialogVisible=false;
+        }else{
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          })
+        }
+      });
+    },
+    close(){
+      this.dialogVisible=false;
+    },
     goHouseEdit(houseId){
       this.$router.push({
         path: "/houseEdit",
@@ -141,9 +263,14 @@ export default {
       });
     },
     handleCommand(command){
-      if(command == "outLogin")
-      sessionStorage.removeItem("userInfo");
-      this.$router.push('/login')
+      if(command === "outLogin"){
+        sessionStorage.removeItem("userInfo");
+        this.$router.push('/login')
+      }else if(command === "houseUser"){
+        this.$router.push('/houseUser')
+      }else if(command === "changPassword"){
+        this.dialogVisible=true;
+      }
     },
     goHouseAdd(val){
       if(this.userInfo.nickName){
