@@ -14,12 +14,12 @@ async function getAreaById(params) {
 async function houseAdd(params) {
   return await http.post('/house/save', params)
 }
-//卖房/出租
+//更新房屋
 async function houseUpdate(params) {
-  return await http.post('/house/update', params)
+  return await http.put('/house/update', params)
 }
 
-//查询
+//条件查询
 async function getHouseByQuery(params) {
   return await http.post('/house/getByQuery', params)
 }
@@ -40,14 +40,14 @@ async function getQualityHouse(params) {
   return await http.get('/house/getQualityHouse', params)
 }
 
-//获取品质房屋
+//后台管理分页查询
 async function getHouseByPage(params) {
   return await http.post('/house/getHouseByPage', params)
 }
 
-//获取品质房屋
+//删除房屋
 async function deleteHouse(params) {
-  return await http.get('/house/delete/'+params, params)
+  return await http.delete('/house/delete/'+params, params)
 }
 
 export default{

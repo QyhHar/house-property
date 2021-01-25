@@ -27,7 +27,7 @@ async function getUserByQuery(params) {
 }
 //更新用户
 async function updateUser(params) {
-  return await http.post('/user/update', params)
+  return await http.put('/user/update', params)
 }
 
 //新增用户
@@ -36,7 +36,7 @@ async function save(params) {
 }
 //修改密码
 async function updatePassword(params) {
-  return await http.post('/user/updatePassword', params)
+  return await http.put('/user/updatePassword', params)
 }
 
 //删除用户

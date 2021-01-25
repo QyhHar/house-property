@@ -75,7 +75,13 @@ public class HouseController {
         return new Response(1,"后台管理查询房源出错");
     }
 
-    @GetMapping("delete/{ids}")
+    /**
+     * @Description: 后台管理
+     * @Description: 删除房源接口
+     * @Author: hang.qi
+     * @Date: 2021/1/25 0025 下午 2:21
+     */
+    @DeleteMapping("delete/{ids}")
     public Response deleteHouse(@PathVariable("ids") String ids){
         try {
             log.info("删除房源接口;ids="+ids);
@@ -281,7 +287,7 @@ public class HouseController {
         return new Response(1,"添加房屋信息出错");
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public Response updateImageInfo(@RequestBody JSONObject jsonObject ){
         try {
             log.info("添加房屋信息");

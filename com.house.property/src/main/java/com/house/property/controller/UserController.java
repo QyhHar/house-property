@@ -132,7 +132,7 @@ public class UserController {
      * @Author: hang.qi
      * @Date: 2021/1/19 0019 上午 10:31
      */
-    @PostMapping("update")
+    @PutMapping("update")
     public Response update(@RequestBody JSONObject jsonObject){
         try {
             log.info("更新用户接口");
@@ -152,7 +152,7 @@ public class UserController {
      * @Author: hang.qi
      * @Date: 2021/1/19 0019 上午 10:31
      */
-    @PostMapping("updatePassword")
+    @PutMapping("updatePassword")
     public Response updatePassword(@RequestBody JSONObject jsonObject){
         try {
             log.info("修改密码接口");
